@@ -260,19 +260,41 @@ function checkLinks() {
   const mdFiles = collectFiles(ROOT, ['.md']);
   let linkCount = 0;
 
-  for (const file of htmlFiles) {
-    const rel = path.relative(ROOT, file);
-    const html = fs.readFileSync(file, 'utf8');
-    const dir = path.dirname(file);
+  /** srcset 里是一串带尺寸描述符的候选地址，需要拆开逐个检查 */
+  const expandSrcset = (value) =>
+    value
+      .split(',')
+      .map((part) => part.trim().split(/\s+/)[0])
+      .filter(Boolean);
 
-    const re = /(?:href|src)\s*=\s*["']([^"']+)["']/gi;
+  /**
+   * 检查一段文本里所有会触发资源加载的属性。
+   * README 用内联 HTML 放 picture/source，这类引用不走 Markdown 图片语法，
+   * 只查 ![]() 会漏掉，最终断链也无人发现。
+   */
+  const checkMarkup = (text, rel, dir) => {
+    const attrRe = /\b(?:href|src)\s*=\s*["']([^"']+)["']/gi;
     let m;
-    while ((m = re.exec(html)) !== null) {
+    while ((m = attrRe.exec(text)) !== null) {
       const raw = m[1].trim();
       if (!raw) continue;
       linkCount++;
       if (isBrokenLink(raw, dir)) fail(rel, `引用了不存在的文件：${raw}`);
     }
+
+    const srcsetRe = /\bsrcset\s*=\s*["']([^"']+)["']/gi;
+    while ((m = srcsetRe.exec(text)) !== null) {
+      for (const raw of expandSrcset(m[1])) {
+        linkCount++;
+        if (isBrokenLink(raw, dir)) fail(rel, `引用了不存在的文件：${raw}`);
+      }
+    }
+  };
+
+  for (const file of htmlFiles) {
+    const rel = path.relative(ROOT, file);
+    const html = fs.readFileSync(file, 'utf8');
+    checkMarkup(html, rel, path.dirname(file));
   }
 
   // 文档里的相对链接同样要能点开，否则贡献者会照着失效路径找文件
@@ -283,6 +305,8 @@ function checkLinks() {
 
     // 去掉代码块与行内代码，避免把示例当链接检查
     const withoutCode = md.replace(/```[\s\S]*?```/g, '').replace(/`[^`\n]*`/g, '');
+
+    // Markdown 链接与图片
     const re = /!?\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
     let m;
     while ((m = re.exec(withoutCode)) !== null) {
@@ -291,6 +315,9 @@ function checkLinks() {
       linkCount++;
       if (isBrokenLink(raw, dir)) fail(rel, `引用了不存在的文件：${raw}`);
     }
+
+    // README 中的内联 HTML，例如 <picture><source srcset="...">
+    checkMarkup(withoutCode, rel, dir);
   }
 
   ok();
@@ -321,7 +348,10 @@ function checkReadmes() {
 
   if (cjkLines.length) {
     const first = cjkLines[0];
-    fail('README.md', `根 README 应为英文，第 ${first.no} 行含中文：${first.line.trim().slice(0, 40)}`);
+    fail(
+      'README.md',
+      `根 README 应为英文，第 ${first.no} 行含中文：${first.line.trim().slice(0, 40)}`,
+    );
   }
 
   if (!/^# .+/m.test(en)) {
@@ -412,7 +442,8 @@ function main() {
     console.log(`  演示 ${s.name}${detail}`);
   }
 
-  const readmeNote = readmes && readmes.cjkLines === 0 ? 'README 英文 / 中文版在 docs' : 'README 语言未通过';
+  const readmeNote =
+    readmes && readmes.cjkLines === 0 ? 'README 英文 / 中文版在 docs' : 'README 语言未通过';
 
   console.log(
     `  页面 ${links.htmlFiles} · 文档 ${links.mdFiles} · 站内链接 ${links.linkCount} · 校验项 ${checks}`,

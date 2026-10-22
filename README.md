@@ -1,5 +1,8 @@
 <p align="center">
-  <img src="assets/readme/logo.svg" width="300" alt="Chrono Atlas" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/readme/logo-dark.svg" />
+    <img src="assets/readme/logo.svg" width="300" alt="Chrono Atlas" />
+  </picture>
 </p>
 
 # Chrono Atlas
@@ -16,6 +19,12 @@
 [Browse online](https://phaethix.github.io/chrono-atlas/) · [First demo](https://phaethix.github.io/chrono-atlas/demos/chunqiu-zhanguo/index.html) · [Chinese version](docs/README.zh-CN.md)
 
 Reproducible data and animation for how Chinese territory changed over time. The first demo covers the Spring and Autumn and Warring States periods, five and a half centuries of annexation.
+
+<p align="center">
+  <img src="assets/readme/showcase.webp" width="100%" alt="The same map at two dates: in 770 BCE, 25 polities are shown in distinct colours; by 221 BCE, Qin has absorbed 35 of the 38 regions" />
+</p>
+
+The two maps above are the same page at two dates. Nothing was redrawn by hand between them: each frame is regenerated from the coordinate list and the chronology, so the second is simply what the data says the first one became.
 
 ## What this is
 

@@ -23,12 +23,9 @@
   "type": "module",
   "scripts": {
     "check": "node scripts/check.mjs",
-    "format": "prettier --write \"**/*.{json,css,md,yml,yaml}\"",
-    "format:check": "prettier --check \"**/*.{json,css,md,yml,yaml}\"",
-    "serve": "node scripts/serve.mjs"
-  },
-  "devDependencies": {
-    "prettier": "^3.3.3"
+    "serve": "node scripts/serve.mjs",
+    "format": "npx --yes prettier@3.9.10 --write \"**/*.{json,css,md,yml,yaml}\"",
+    "format:check": "npx --yes prettier@3.9.10 --check \"**/*.{json,css,md,yml,yaml}\""
   },
   "engines": {
     "node": ">=18"

@@ -1,6 +1,17 @@
+<p align="center">
+  <img src="../assets/readme/logo.svg" width="300" alt="Chrono Atlas" />
+</p>
+
 # 时空图集 Chrono Atlas
 
 **把历史的疆域、人口与事件做成可交互的时间轴动画。每个演示都附一份可读、可校验、可贡献的数据。**
+
+<p align="center">
+  <a href="https://github.com/phaethix/chrono-atlas"><img src="https://img.shields.io/github/stars/phaethix/chrono-atlas?style=flat&label=stars" alt="GitHub stars" /></a>
+  <a href="https://github.com/phaethix/chrono-atlas/actions/workflows/ci.yml"><img src="https://github.com/phaethix/chrono-atlas/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI" /></a>
+  <a href="../LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="License: MIT" /></a>
+  <a href="../README.md"><img src="https://img.shields.io/badge/docs-English-1C1917" alt="English documentation" /></a>
+</p>
 
 中国历史疆域变迁的可复现数据与动画。第一个演示是春秋战国，五百五十年间的兼并。
 

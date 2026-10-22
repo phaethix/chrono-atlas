@@ -1,10 +1,21 @@
+<p align="center">
+  <img src="assets/readme/logo.svg" width="300" alt="Chrono Atlas" />
+</p>
+
 # Chrono Atlas
 
 **Historical territory, population and events as interactive timeline animations. Every demo ships with data that is readable, verifiable and open to contribution.**
 
-Reproducible data and animation for how Chinese territory changed over time. The first demo covers the Spring and Autumn and Warring States periods, five and a half centuries of annexation.
+<p align="center">
+  <a href="https://github.com/phaethix/chrono-atlas"><img src="https://img.shields.io/github/stars/phaethix/chrono-atlas?style=flat&label=stars" alt="GitHub stars" /></a>
+  <a href="https://github.com/phaethix/chrono-atlas/actions/workflows/ci.yml"><img src="https://github.com/phaethix/chrono-atlas/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI" /></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="License: MIT" /></a>
+  <a href="./docs/README.zh-CN.md"><img src="https://img.shields.io/badge/docs-%E4%B8%AD%E6%96%87-d4a017" alt="Chinese documentation" /></a>
+</p>
 
 [Browse online](https://phaethix.github.io/chrono-atlas/) · [First demo](https://phaethix.github.io/chrono-atlas/demos/chunqiu-zhanguo/index.html) · [Chinese version](docs/README.zh-CN.md)
+
+Reproducible data and animation for how Chinese territory changed over time. The first demo covers the Spring and Autumn and Warring States periods, five and a half centuries of annexation.
 
 ## What this is
 

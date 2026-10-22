@@ -42,18 +42,36 @@ cp -r demos/chunqiu-zhanguo demos/your-era
 
 ## 提交信息
 
-用 Conventional Commits，前缀有助于生成 changelog：
+用 Conventional Commits，且必须使用英文。前缀有助于生成 changelog，英文则让仓库的历史对非中文使用者也可读。
 
 ```
-feat(demo): 增加秦灭六国的分阶段动画
-fix(data): 修正前 306 年越地归属
-docs: 补充区域边界的绘制建议
-chore(ci): 缓存 Node 环境
+feat(demo): add the staged animation of Qin's conquests
+fix(data): correct the ownership of Yue in 306 BCE
+docs: explain how to pick boundary vertices
+chore(ci): cache the Node toolchain
 ```
 
-常用类型：`feat`、`fix`、`docs`、`style`、`refactor`、`test`、`chore`。
+常用类型：`feat`、`fix`、`docs`、`style`、`refactor`、`test`、`chore`、`ci`。
 
-描述用中文或英文都可以。历史类内容用中文更准确，代码类内容用英文更通用，按改动性质选择。
+标题不超过 72 字符，不以句号结尾。需要说清背景时，空一行写正文，正文每行不超过 100 字符。
+
+本地钩子与 CI 共用同一份检查逻辑：
+
+```bash
+git config core.hooksPath .githooks
+```
+
+设置后 `git commit` 会由 `.githooks/commit-msg` 自动校验，不合格的提交信息当场就会被拒绝。这个命令每个克隆只需执行一次。
+
+### 一个提交只做一件事
+
+同一个提交里不要混入不相关的改动。改数据就只改数据，改流水线就只改流水线。这不只是为了好看：
+
+- 数据勘误需要单独评审，混在重构里会让它难以被审出来
+- 出问题时能只回滚一个提交，而不是连带撤掉一堆无关改动
+- `git log` 的每一行都对应一个可理解的动作
+
+如果一次改动同时涉及数据修正和渲染调整，就分成两个提交。同一个 PR 里可以有多个提交。
 
 ## 分支与 PR
 

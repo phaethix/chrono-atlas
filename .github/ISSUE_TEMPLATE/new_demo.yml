@@ -1,0 +1,71 @@
+name: 新的演示提案
+description: 提议一个新的历史题材，或告知你打算动手做一个
+title: '[demo] '
+labels: ['demo', 'proposal']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        开新演示之前先提一个提案，可以避免做完发现方向不对。
+        如果你已经做完了，也可以直接提 PR，不必先开 Issue。
+
+  - type: input
+    id: topic
+    attributes:
+      label: 题材
+      placeholder: 例如 罗马行省的扩张 / 日本战国势力消长 / 三国鼎立的形成
+    validations:
+      required: true
+
+  - type: input
+    id: period
+    attributes:
+      label: 时间区间
+      description: 公元前用负数
+      placeholder: 例如 -264 至 117
+    validations:
+      required: true
+
+  - type: input
+    id: scope
+    attributes:
+      label: 地理范围
+      placeholder: 例如 地中海世界 / 日本列岛 / 中国
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: 这个题材适合用时间轴动画表达吗
+      description: |
+        说明它随时间变化的机制：是疆域推移、阵营变化，还是别的。
+        如果一个题材的主体是静态的，动画未必是好的呈现方式。
+    validations:
+      required: true
+
+  - type: textarea
+    id: data
+    attributes:
+      label: 数据来源设想
+      description: 你打算依据哪些文献或地图集？区域大概会分成多少个？
+    validations:
+      required: true
+
+  - type: textarea
+    id: shape
+    attributes:
+      label: 与现有演示的形态差异
+      description: |
+        如果题材形态和「多边形逐年归属」不同，比如需要画路线、曲线或网络，
+        请说明。这类题材可能需要重写 app.js，提前说明有助于评审。
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: willing
+    attributes:
+      label: 参与意愿
+      options:
+        - label: 我打算自己动手实现
+        - label: 我只是提议，希望有人来做

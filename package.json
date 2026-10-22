@@ -1,0 +1,33 @@
+{
+  "name": "chrono-atlas",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Interactive timeline animations of historical territory, population and events, built on readable and verifiable data.",
+  "keywords": [
+    "history",
+    "historical-map",
+    "timeline",
+    "dataviz",
+    "svg",
+    "static-site"
+  ],
+  "homepage": "https://phaethix.github.io/chrono-atlas/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phaethix/chrono-atlas.git"
+  },
+  "bugs": {
+    "url": "https://github.com/phaethix/chrono-atlas/issues"
+  },
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "check": "node scripts/check.mjs",
+    "serve": "node scripts/serve.mjs",
+    "format": "npx --yes prettier@3.9.10 --write \"**/*.{json,css,md,yml,yaml}\"",
+    "format:check": "npx --yes prettier@3.9.10 --check \"**/*.{json,css,md,yml,yaml}\""
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

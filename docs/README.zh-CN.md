@@ -19,10 +19,10 @@
 中国历史疆域变迁的可复现数据与动画。第一个演示是春秋战国，五百五十年间的兼并。
 
 <p align="center">
-  <img src="../assets/readme/showcase.webp" width="100%" alt="同一张地图的两个年份：前 770 年有 25 个势力并各自异色，前 221 年秦已吞并 38 个区域中的 35 个" />
+  <img src="../assets/readme/showcase.webp" width="100%" alt="左右对比：前 770 年有 25 个势力各自异色，前 221 年秦已吞并 38 个区域中的 35 个" />
 </p>
 
-上面两张图是同一个页面的两个年份。它们之间没有一处是手绘的：每一帧都由坐标列表与年表重新生成，所以后一张图只是数据显示的前一张图的去向。
+左右两图是同一个页面的两个年份。它们之间没有一处是手绘的：每一帧都由坐标列表与年表重新生成，所以右图只是数据显示的左图的去向。
 
 [在线浏览](https://phaethix.github.io/chrono-atlas/) · [第一个演示](https://phaethix.github.io/chrono-atlas/demos/chunqiu-zhanguo/index.html) · [English README](../README.md)
 

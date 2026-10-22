@@ -1,0 +1,8 @@
+# 演示的脚本与样式刻意保留紧凑、对齐的写法，不交给格式化工具
+demos/*/data.js
+demos/*/app.js
+demos/*/style.css
+
+node_modules/
+_site/
+package-lock.json

@@ -1,11 +1,3 @@
-# Chrono Atlas · 时空图集
-
-**把历史的疆域、人口与事件做成可交互的时间轴动画。每个演示都附一份可读、可校验、可贡献的数据。**
-
-中国历史疆域变迁的可复现数据与动画。第一个演示是春秋战国，五百五十年间的兼并。
-
-[在线浏览](https://phaethix.github.io/chrono-atlas/) · [第一个演示](https://phaethix.github.io/chrono-atlas/demos/chunqiu-zhanguo/index.html) · [中文说明](README.zh-CN.md)
-
 ---
 
 ## 这是什么

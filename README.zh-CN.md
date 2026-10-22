@@ -1,9 +1,3 @@
-# 时空图集 Chrono Atlas
-
-**把历史的疆域、人口与事件做成可交互的时间轴动画。每个演示都附一份可读、可校验、可贡献的数据。**
-
-[在线浏览](https://phaethix.github.io/chrono-atlas/) · [英文说明](README.md)
-
 ---
 
 ## 这是什么

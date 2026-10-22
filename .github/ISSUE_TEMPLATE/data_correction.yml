@@ -1,0 +1,72 @@
+name: 数据勘误
+description: 某年的归属、边界、地名或年份有误
+title: '[data] '
+labels: ['data', 'needs-verification']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢指出错误。数据勘误是这个项目最有价值的贡献之一。
+        请尽量把依据写清楚，没有出处的勘误很难被采纳。
+
+  - type: dropdown
+    id: demo
+    attributes:
+      label: 涉及的演示
+      options:
+        - 春秋战国 · 疆域与兼并
+        - 其他（在下方说明）
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: 涉及的区域或势力
+      description: 写区域键或名称，例如 `yue`（越）、`daibei`（代北）
+      placeholder: 例如 yue（越）
+    validations:
+      required: true
+
+  - type: input
+    id: year
+    attributes:
+      label: 涉及年份
+      description: 公元前用负数
+      placeholder: 例如 -306
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: 现在的写法
+      description: 当前数据里是什么
+      placeholder: 例如前 306 年将 yue 划归 chu，并在同年宣布越亡
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 应该是什么
+      description: 你认为正确的归属或年份
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 依据
+      description: 文献名、卷次、条目，或历史地图集的具体图幅。有异说请一并说明。
+      placeholder: 例如《史记·越王勾践世家》载……；另有一说系于前 334 年，见……
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: 确认
+      options:
+        - label: 我理解这条改动会被要求提供可查的出处
+          required: true

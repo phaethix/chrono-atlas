@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>时空图集 · 用动画读历史</title>
+<meta name="description" content="把历史的疆域、人口与事件做成可交互的时间轴动画。每个演示都是一份可读、可校验、可贡献的数据。">
+<meta property="og:title" content="时空图集 Chrono Atlas">
+<meta property="og:description" content="把历史的疆域、人口与事件做成可交互的时间轴动画。">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site-head">
+    <div class="eyebrow">Chrono Atlas</div>
+    <h1>时空图集 <span>用动画读历史</span></h1>
+    <p class="lede">
+      把历史的疆域、人口与事件做成可交互的时间轴动画。
+      每个演示都附一份可读、可校验的数据，改动一行就能看到版图变化。
+    </p>
+    <div class="links">
+      <a href="https://github.com/phaethix/chrono-atlas">GitHub</a>
+      <a href="docs/adding-a-demo.md">新增一个演示</a>
+      <a href="docs/data-format.md">数据格式</a>
+      <a href="docs/README.zh-CN.md">中文说明</a>
+      <a href="https://github.com/phaethix/chrono-atlas/blob/main/CONTRIBUTING.md">参与贡献</a>
+    </div>
+  </header>
+
+  <div class="section-title">演示</div>
+  <div class="cards">
+
+    <a class="card" href="demos/chunqiu-zhanguo/index.html">
+      <h3>春秋战国<span>疆域与兼并</span></h3>
+      <div class="meta">前 770 — 前 221 · 中国</div>
+      <p>五百五十年间，百余诸侯并吞为七雄，终归于一。逐年的疆域归属、灭国事件与关键战役。</p>
+      <div class="tags">
+        <b>中国</b><b>先秦</b><b>疆域</b><b>兼并</b>
+      </div>
+      <div class="go">进入演示 →</div>
+    </a>
+
+    <div class="card placeholder">
+      <h3>下一个题材</h3>
+      <div class="meta">征集中</div>
+      <p>罗马行省的扩张、日本战国的势力消长、大航海时代的航线与殖民点，都适合用同一套形式表达。</p>
+      <div class="tags"><b>欢迎提 Issue</b><b>或直接提 PR</b></div>
+    </div>
+
+  </div>
+
+  <div class="section-title">关于</div>
+  <div class="doc">
+    <h3>为什么另做一个</h3>
+    <p>历史地图不缺，缺的是能读到底层数据的那种。这里每个演示的疆域都是一组经纬度多边形加一条归属变更年表，而不是一张画好的图片：想改边界就改坐标，想改结论就改年份，改完刷新即可。</p>
+    <p>因此演示里的每一处版图变化都能追溯到具体年份与史料，也能被脚本校验。数据有错时，交互做得再精致也只是把错误放大，所以每个演示都配了完整性检查。</p>
+
+    <h3>技术取向</h3>
+    <p>纯静态、零构建、零运行时依赖。双击 <code>index.html</code> 就能打开，不需要 Node、不需要打包，也不需要联网。这样做不是排斥工具链，而是希望十年后这些页面仍然能打开。</p>
+    <p>代价是没有组件复用，第二个演示出现前也不打算抽公共引擎。抽象应该从重复中长出来，而不是从预判中。</p>
+  </div>
+
+  <footer class="site-foot">
+    <span>MIT License</span>
+    <span>数据与代码同协议</span>
+    <div class="spacer"></div>
+    <a href="https://github.com/phaethix/chrono-atlas">源码</a>
+    <a href="https://github.com/phaethix/chrono-atlas/issues">反馈</a>
+  </footer>
+
+</div>
+</body>
+</html>

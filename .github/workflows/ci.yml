@@ -31,3 +31,24 @@ jobs:
       # 全部由仓库内的零依赖脚本完成，不下载任何外部工具
       - name: 运行自检
         run: node scripts/check.mjs
+
+  commits:
+    name: 提交信息
+    runs-on: ubuntu-latest
+    # 只在 PR 上检查新增的提交；push 到 main 时这些提交已经过评审
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: 检出
+        uses: actions/checkout@v7
+        with:
+          # 需要完整历史才能取出 PR 的提交区间
+          fetch-depth: 0
+
+      - name: 准备 Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # 与 .githooks/commit-msg 共用同一份逻辑，规范只写一处
+      - name: 检查提交信息
+        run: node scripts/check-commits.mjs "origin/${{ github.base_ref }}..HEAD"

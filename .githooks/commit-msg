@@ -1,0 +1,5 @@
+#!/bin/sh
+# 提交信息守门。启用方式：
+#   git config core.hooksPath .githooks
+# 与 CI 使用同一份检查逻辑，避免本地通过、远端失败。
+exec node "$(git rev-parse --show-toplevel)/scripts/check-commits.mjs" "$1"

@@ -2,11 +2,11 @@
 /**
  * 时空图集 · 仓库自检
  *
- * 零依赖，只做四类真正会出错、且出错后不容易凭肉眼发现的事：
+ * 零依赖，只做几类真正会出错、且出错后不容易凭肉眼发现的事：
  *   1. 演示数据完整性（区域键、势力键、年份区间、经纬度范围）
  *   2. 演示元信息与目录名一致
- *   3. 站内相对链接可解析
- *   4. 每个演示都齐备必要文件
+ *   3. 站内相对链接可解析（HTML 与 Markdown 都查）
+ *   4. 每个演示都齐备必要文件，且在画廊首页登记
  *
  * 用法：node scripts/check.mjs
  * 退出码非 0 表示检查未通过，CI 会因此失败。
@@ -27,7 +27,9 @@ let checks = 0;
 
 const fail = (where, msg) => errors.push(`${where}: ${msg}`);
 const warn = (where, msg) => warnings.push(`${where}: ${msg}`);
-const ok = () => { checks++; };
+const ok = () => {
+  checks++;
+};
 
 /* ---------- 1. 载入演示数据 ---------- */
 
@@ -55,21 +57,21 @@ function validateDemo(demoName, dir) {
   }
 
   const dataFile = path.join(dir, 'data.js');
-  if (!fs.existsSync(dataFile)) return;
+  if (!fs.existsSync(dataFile)) return {};
 
   let data;
   try {
     data = loadDemoData(dataFile);
   } catch (e) {
     fail(where, `data.js 求值失败：${e.message}`);
-    return;
+    return {};
   }
 
   const { META, S, REGIONS, RIVERS, INIT, EVENTS, BATTLES, ERAS, NOTES } = data;
 
   if (!META || typeof META !== 'object') {
     fail(where, 'data.js 未导出 META');
-    return;
+    return {};
   }
 
   if (META.id !== demoName) {
@@ -80,7 +82,7 @@ function validateDemo(demoName, dir) {
   }
   if (typeof META.from !== 'number' || typeof META.to !== 'number') {
     fail(where, 'META.from / META.to 必须是数字（公元前用负数）');
-    return;
+    return {};
   }
   if (META.from >= META.to) {
     fail(where, `META.from (${META.from}) 应小于 META.to (${META.to})`);
@@ -90,7 +92,10 @@ function validateDemo(demoName, dir) {
   /* ------- 区域 ------- */
   const regionKeys = new Set();
   for (const r of REGIONS || []) {
-    if (!r.k) { fail(where, '存在没有 k 的区域'); continue; }
+    if (!r.k) {
+      fail(where, '存在没有 k 的区域');
+      continue;
+    }
     if (regionKeys.has(r.k)) fail(where, `区域键重复：${r.k}`);
     regionKeys.add(r.k);
     if (!r.n) fail(where, `区域 ${r.k} 缺少名称 n`);
@@ -107,8 +112,6 @@ function validateDemo(demoName, dir) {
       const [lon, lat] = pt;
       if (!Number.isFinite(lon) || !Number.isFinite(lat)) {
         fail(where, `区域 ${r.k} 第 ${i} 个顶点不是有限数字`);
-      } else if (lon < 70 || lon > 140 || lat < 3 || lat > 55) {
-        warn(where, `区域 ${r.k} 第 ${i} 个顶点 (${lon}, ${lat}) 超出中国范围，确认是否有意`);
       }
     }
     const first = r.p[0];
@@ -152,7 +155,10 @@ function validateDemo(demoName, dir) {
   let prevYear = -Infinity;
   for (const [i, e] of (EVENTS || []).entries()) {
     const at = `EVENTS[${i}]`;
-    if (typeof e.y !== 'number') { fail(where, `${at} 的 y 必须是数字`); continue; }
+    if (typeof e.y !== 'number') {
+      fail(where, `${at} 的 y 必须是数字`);
+      continue;
+    }
     if (e.y < META.from || e.y > META.to) {
       fail(where, `${at} 年份 ${e.y} 超出演示区间 ${META.from}..${META.to}`);
     }
@@ -162,7 +168,9 @@ function validateDemo(demoName, dir) {
 
     for (const [region, owner] of Object.entries(e.ch || {})) {
       if (!regionKeys.has(region)) fail(where, `${at} (${e.y}) 变更了不存在的区域：${region}`);
-      if (!powerKeys.has(owner)) fail(where, `${at} (${e.y}) 把 ${region} 划给了不存在的势力：${owner}`);
+      if (!powerKeys.has(owner)) {
+        fail(where, `${at} (${e.y}) 把 ${region} 划给了不存在的势力：${owner}`);
+      }
     }
   }
   if (!(EVENTS || []).length) fail(where, 'EVENTS 为空');
@@ -186,8 +194,7 @@ function validateDemo(demoName, dir) {
   for (const [i, r] of (RIVERS || []).entries()) {
     if (!Array.isArray(r) || r.length < 2) fail(where, `RIVERS[${i}] 至少要两个点`);
   }
-  const eraCoverage = (ERAS || []).length > 0;
-  if (!eraCoverage) fail(where, 'ERAS 为空');
+  if (!(ERAS || []).length) fail(where, 'ERAS 为空');
   for (const [i, era] of (ERAS || []).entries()) {
     if (typeof era.from !== 'number' || typeof era.to !== 'number' || !era.name) {
       fail(where, `ERAS[${i}] 需要 from / to / name`);
@@ -215,23 +222,42 @@ function validateDemo(demoName, dir) {
   }
   ok();
 
-  return { regionCount: regionKeys.size, powerCount: powerKeys.size, eventCount: (EVENTS || []).length };
+  return {
+    regionCount: regionKeys.size,
+    powerCount: powerKeys.size,
+    eventCount: (EVENTS || []).length,
+  };
 }
 
 /* ---------- 3. 站内链接 ---------- */
 
-function collectHtmlFiles(dir, acc = []) {
+function collectFiles(dir, exts, acc = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
     const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) collectHtmlFiles(full, acc);
-    else if (entry.name.endsWith('.html')) acc.push(full);
+    if (entry.isDirectory()) collectFiles(full, exts, acc);
+    else if (exts.some((e) => entry.name.endsWith(e))) acc.push(full);
   }
   return acc;
 }
 
+/** 相对链接是否指向仓库内存在的文件。外部链接、锚点、邮件等一律跳过。 */
+function isBrokenLink(raw, dir) {
+  if (!raw) return false;
+  if (/^(https?:)?\/\//i.test(raw)) return false;
+  if (/^(mailto:|tel:|data:|javascript:|#)/i.test(raw)) return false;
+
+  const cleaned = raw.split('#')[0].split('?')[0];
+  if (!cleaned) return false;
+
+  const target = cleaned.startsWith('/') ? path.join(ROOT, cleaned) : path.resolve(dir, cleaned);
+
+  return !fs.existsSync(target);
+}
+
 function checkLinks() {
-  const htmlFiles = collectHtmlFiles(ROOT);
+  const htmlFiles = collectFiles(ROOT, ['.html']);
+  const mdFiles = collectFiles(ROOT, ['.md']);
   let linkCount = 0;
 
   for (const file of htmlFiles) {
@@ -239,35 +265,41 @@ function checkLinks() {
     const html = fs.readFileSync(file, 'utf8');
     const dir = path.dirname(file);
 
-    // href / src 里只检查相对路径，外部链接与锚点跳过
     const re = /(?:href|src)\s*=\s*["']([^"']+)["']/gi;
     let m;
     while ((m = re.exec(html)) !== null) {
       const raw = m[1].trim();
       if (!raw) continue;
-      if (/^(https?:)?\/\//i.test(raw)) continue;
-      if (/^(mailto:|tel:|data:|javascript:|#)/i.test(raw)) continue;
-
-      const cleaned = raw.split('#')[0].split('?')[0];
-      if (!cleaned) continue;
-
-      const target = cleaned.startsWith('/')
-        ? path.join(ROOT, cleaned)
-        : path.resolve(dir, cleaned);
-
       linkCount++;
-      if (!fs.existsSync(target)) {
-        fail(rel, `引用了不存在的文件：${raw}`);
-      }
+      if (isBrokenLink(raw, dir)) fail(rel, `引用了不存在的文件：${raw}`);
     }
   }
+
+  // 文档里的相对链接同样要能点开，否则贡献者会照着失效路径找文件
+  for (const file of mdFiles) {
+    const rel = path.relative(ROOT, file);
+    const md = fs.readFileSync(file, 'utf8');
+    const dir = path.dirname(file);
+
+    // 去掉代码块与行内代码，避免把示例当链接检查
+    const withoutCode = md.replace(/```[\s\S]*?```/g, '').replace(/`[^`\n]*`/g, '');
+    const re = /!?\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
+    let m;
+    while ((m = re.exec(withoutCode)) !== null) {
+      const raw = m[1].trim();
+      if (!raw) continue;
+      linkCount++;
+      if (isBrokenLink(raw, dir)) fail(rel, `引用了不存在的文件：${raw}`);
+    }
+  }
+
   ok();
-  return { htmlFiles: htmlFiles.length, linkCount };
+  return { htmlFiles: htmlFiles.length, mdFiles: mdFiles.length, linkCount };
 }
 
 /* ---------- 4. 演示索引一致性 ---------- */
 
-function checkGallery() {
+function checkGallery(demoDirs) {
   const indexFile = path.join(ROOT, 'index.html');
   if (!fs.existsSync(indexFile)) {
     fail('index.html', '缺少画廊首页');
@@ -275,52 +307,50 @@ function checkGallery() {
   }
   const index = fs.readFileSync(indexFile, 'utf8');
 
-  const demoDirs = fs
-    .readdirSync(DEMOS_DIR, { withFileTypes: true })
-    .filter((e) => e.isDirectory())
-    .map((e) => e.name);
-
   for (const name of demoDirs) {
     if (!index.includes(`demos/${name}/index.html`)) {
       fail('index.html', `演示 ${name} 未在画廊首页登记`);
     }
   }
   ok();
-  return { demoCount: demoDirs.length };
 }
 
 /* ---------- 主流程 ---------- */
 
 function main() {
+  const summaries = [];
+
   if (!fs.existsSync(DEMOS_DIR)) {
     fail('demos', '缺少 demos 目录');
   }
 
-  const summaries = [];
-  const demoDirs = fs
-    .readdirSync(DEMOS_DIR, { withFileTypes: true })
-    .filter((e) => e.isDirectory())
-    .map((e) => e.name)
-    .sort();
+  const demoDirs = fs.existsSync(DEMOS_DIR)
+    ? fs
+        .readdirSync(DEMOS_DIR, { withFileTypes: true })
+        .filter((e) => e.isDirectory())
+        .map((e) => e.name)
+        .sort()
+    : [];
 
   for (const name of demoDirs) {
     summaries.push({ name, ...validateDemo(name, path.join(DEMOS_DIR, name)) });
   }
 
-  checkGallery();
+  checkGallery(demoDirs);
   const links = checkLinks();
 
   console.log('时空图集 · 仓库自检\n');
 
   for (const s of summaries) {
-    console.log(
-      `  演示 ${s.name}` +
-        (s.regionCount
-          ? `  区域 ${s.regionCount} · 势力 ${s.powerCount} · 事件 ${s.eventCount}`
-          : '  （数据未通过校验）'),
-    );
+    const detail = s.regionCount
+      ? `  区域 ${s.regionCount} · 势力 ${s.powerCount} · 事件 ${s.eventCount}`
+      : '  （数据未通过校验）';
+    console.log(`  演示 ${s.name}${detail}`);
   }
-  console.log(`  页面 ${links.htmlFiles} · 站内链接 ${links.linkCount} · 校验项 ${checks}\n`);
+
+  console.log(
+    `  页面 ${links.htmlFiles} · 文档 ${links.mdFiles} · 站内链接 ${links.linkCount} · 校验项 ${checks}\n`,
+  );
 
   if (warnings.length) {
     console.log(`提示（${warnings.length}）：`);

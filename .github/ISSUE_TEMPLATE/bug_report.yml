@@ -1,0 +1,57 @@
+name: 缺陷报告
+description: 页面打不开、渲染错位、交互失效
+title: '[bug] '
+labels: ['bug']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        如果是历史数据本身有误，请改用「数据勘误」模板。
+
+  - type: dropdown
+    id: demo
+    attributes:
+      label: 涉及的页面
+      options:
+        - 画廊首页
+        - 春秋战国 · 疆域与兼并
+        - 其他（在下方说明）
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: 现象
+      description: 发生了什么，你预期是什么
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 越具体越好。涉及年份的，写出具体年份。
+      placeholder: |
+        1. 打开 demos/chunqiu-zhanguo/index.html
+        2. 拖动时间轴到前 306 年
+        3. 观察到……
+    validations:
+      required: true
+
+  - type: input
+    id: env
+    attributes:
+      label: 环境
+      description: 浏览器与版本、操作系统。如果是本地打开，说明是双击还是起了服务器。
+      placeholder: 例如 Chrome 130 / macOS 15 / 双击打开
+    validations:
+      required: true
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: 截图或控制台报错
+      description: 有的话贴上来，能显著加快定位
+    validations:
+      required: false

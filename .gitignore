@@ -1,0 +1,30 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# 编辑器
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 构建与部署产物
+_site/
+dist/
+
+# 临时文件
+*.log
+*.tmp
+.cache/
+
+# 本地环境
+.env
+.env.local

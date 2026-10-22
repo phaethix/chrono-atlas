@@ -1,0 +1,15 @@
+# 统一按文本处理，避免跨平台换行符差异
+* text=auto eol=lf
+
+# 二进制资源不做行尾转换
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+
+# GitHub 语言统计：把 HTML 当站点主语言，避免 CSS/JS 抢占比
+*.html linguist-detectable=true
+demos/*/data.js linguist-detectable=true

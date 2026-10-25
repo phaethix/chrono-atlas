@@ -3,16 +3,18 @@
  *
  * 只服务画廊首页。演示自带 style.css，与本文件无关。
  * 取向：一块底色、一层边线、一处强调色。不加渐变、不加阴影、不做悬停位移。
+ * 浅色底：纸白偏暖，卡片纯白，靠边线分层，不靠阴影。
  */
 :root {
-  --bg: #0b0f16;
-  --panel: #0f1620;
-  --line: #1c2532;
-  --text: #e6ecf3;
-  --muted: #8b98a8;
-  --dim: #5b6879;
-  --faint: #3d4a5c;
-  --done: #d4a017;
+  --bg: #f6f4f0;
+  --panel: #ffffff;
+  --line: #e7e3db;
+  --line-strong: #d3ccc0;
+  --text: #1b2027;
+  --muted: #5b646f;
+  --dim: #6d747e;
+  --faint: #9d998f;
+  --done: #9a6a14;
 }
 * {
   box-sizing: border-box;
@@ -22,6 +24,7 @@ body {
   min-height: 100vh;
   background: var(--bg);
   color: var(--text);
+  color-scheme: light;
   font-family:
     -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
     sans-serif;
@@ -78,7 +81,7 @@ h1 {
 }
 .links a:hover {
   color: var(--text);
-  border-bottom-color: var(--line);
+  border-bottom-color: var(--line-strong);
 }
 
 /* ---------- 区块 ---------- */
@@ -122,7 +125,7 @@ section h2 span {
   transition: border-color 0.18s;
 }
 .card:hover {
-  border-color: #2c3a4b;
+  border-color: var(--line-strong);
 }
 .card .top {
   display: flex;
@@ -130,7 +133,7 @@ section h2 span {
   gap: 12px;
   font-size: 10.5px;
   letter-spacing: 0.1em;
-  color: var(--faint);
+  color: var(--dim);
 }
 .card h3 {
   margin: 14px 0 0;
@@ -217,9 +220,10 @@ section h2 span {
   color: var(--text);
   text-decoration: none;
   border-bottom: 1px solid transparent;
+  transition: border-color 0.16s;
 }
 .vgroup li.on a:hover {
-  border-bottom-color: #2c3a4b;
+  border-bottom-color: var(--line-strong);
 }
 
 /* ---------- 页脚 ---------- */

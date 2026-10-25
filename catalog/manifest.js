@@ -33,8 +33,9 @@ const VOLUMES = [
     no: 2,
     title: '国家',
     period: '夏、商',
-    status: 'planned',
-    views: [],
+    status: 'done',
+    views: ['sandai'],
+    note: '只覆盖三代的形态与建国；埃及、希腊的对照尚未成图。',
     chapters: ['第一章 国家与人', '第二章 城市跟你说', '第三章 从雅典到费城', '第四章 谢绝宗教', '第五章 告别图腾', '第六章 闯他一回红灯'],
   },
   {

@@ -35,6 +35,11 @@
 - `npm run format` / `format:check` 的检查范围由 `json/css/md/yml` 扩到整个仓库，与 `npx prettier --check .` 一致
 - CI 增加格式检查；`demos/` 下的 `data.js`、`app.js`、`style.css` 仍由 `.prettierignore` 排除
 
+### 新增
+
+- 第二卷《国家》的三代视图：夏、商、周并排对照，三步进程，附埃及与中国的图腾对照
+- `META.view: 'compare'` 与 `COLUMNS`：并排的列不必凑地图或人物图
+
 ### 移除
 
 - 第一卷的文化区图（`demos/zuxian/`）：文化序列与年代超出《祖先》范围，下架待重做，理由见设计文档 0004

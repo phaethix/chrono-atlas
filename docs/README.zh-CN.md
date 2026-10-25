@@ -18,9 +18,9 @@
 
 [在线浏览](https://phaethix.github.io/chrono-atlas/) · [人物与阶段](https://phaethix.github.io/chrono-atlas/demos/renwu/index.html) · [English README](../README.md)
 
-一套按二十四卷规划的中国史图集，已有两卷做出视图。第一卷是人物与阶段图，第五卷是春秋战国的疆域动画。边界来自坐标列表，人物与关系来自全库共用的语料，每一条都注明出自哪一章。
+一套按二十四卷规划的中国史图集，已有三卷做出视图。第一卷是人物与阶段图，第二卷把三代并排对照，第五卷是春秋战国的疆域动画。边界来自坐标列表，人物与关系来自全库共用的语料，每一条都注明出自哪一章。
 
-首页列出全部二十四卷，标注其中已经做出来的两卷。这张卷目由 `catalog/manifest.js` 生成，校验脚本读的也是它，不另存一份，也就不会对不上。
+首页列出全部二十四卷，标注其中已经做出来的三卷。这张卷目由 `catalog/manifest.js` 生成，校验脚本读的也是它，不另存一份，也就不会对不上。
 
 <p align="center">
   <img src="../assets/readme/showcase.webp" width="100%" alt="左右对比：前 770 年有 25 个势力各自异色，前 221 年秦已吞并 38 个区域中的 35 个" />
@@ -41,9 +41,10 @@
 | 卷次 | 视图                                               | 内容                                             |
 | ---- | -------------------------------------------------- | ------------------------------------------------ |
 | 一   | [人物与阶段 · 从蛙到龙](../demos/renwu/)           | 15 个人物，6 个阶段，19 条关系，2 条被否定的旧说 |
+| 二   | [三代 · 草创、探索、形成](../demos/sandai/)        | 3 列对照，3 步进程，1 组埃及对照                 |
 | 五   | [春秋战国 · 疆域与兼并](../demos/chunqiu-zhanguo/) | 38 个区域，29 个势力，69 条事件，15 场战役       |
 
-其余二十二卷已登记未开工：卷次、书名、分期与章目都记在 [`catalog/manifest.js`](../catalog/manifest.js)。要动手做一卷，先看 [design/0003](design/0003-full-history-architecture.md) 的流程，再看 [adding-a-demo.md](adding-a-demo.md) 的做法。
+其余二十一卷已登记未开工：卷次、书名、分期与章目都记在 [`catalog/manifest.js`](../catalog/manifest.js)。要动手做一卷，先看 [design/0003](design/0003-full-history-architecture.md) 的流程，再看 [adding-a-demo.md](adding-a-demo.md) 的做法。
 
 ## 取材
 

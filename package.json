@@ -24,8 +24,8 @@
   "scripts": {
     "check": "node scripts/check.mjs",
     "serve": "node scripts/serve.mjs",
-    "format": "npx --yes prettier@3.9.10 --write \"**/*.{json,css,md,yml,yaml}\"",
-    "format:check": "npx --yes prettier@3.9.10 --check \"**/*.{json,css,md,yml,yaml}\""
+    "format": "npx --yes prettier@3.9.10 --write .",
+    "format:check": "npx --yes prettier@3.9.10 --check ."
   },
   "engines": {
     "node": ">=18"

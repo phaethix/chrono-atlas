@@ -1,8 +1,16 @@
-# 演示的脚本与样式刻意保留紧凑、对齐的写法，不交给格式化工具
+# 演示的脚本与样式刻意保留紧凑、对齐的写法，不交给格式化工具。
+# 这三类文件是本仓库唯一的例外：数据段用对齐的空格排成表格，格式化会把它拆散。
 demos/*/data.js
 demos/*/app.js
 demos/*/style.css
 
+# 卷目与语料同属数据，理由同上
+catalog/*.js
+corpus/**/*.js
+
 node_modules/
 _site/
 package-lock.json
+
+# 本地助手的工作区，不属于仓库内容
+.workbuddy/

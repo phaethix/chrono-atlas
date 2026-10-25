@@ -7,7 +7,7 @@
 
 # Chrono Atlas
 
-**Historical territory, population and events as interactive timeline animations. Every demo ships with data that is readable, verifiable and open to contribution.**
+**Chinese history as data you can read: territory, people, kinship and events. Every demo ships with sources and integrity checks, and every fact carries its evidence.**
 
 <p align="center">
   <a href="https://github.com/phaethix/chrono-atlas"><img src="https://img.shields.io/github/stars/phaethix/chrono-atlas?style=flat&label=stars" alt="GitHub stars" /></a>
@@ -18,7 +18,9 @@
 
 [Browse online](https://phaethix.github.io/chrono-atlas/) · [First demo](https://phaethix.github.io/chrono-atlas/demos/chunqiu-zhanguo/index.html) · [Chinese version](docs/README.zh-CN.md)
 
-Reproducible data and animation for how Chinese territory changed over time. The first demo covers the Spring and Autumn and Warring States periods, five and a half centuries of annexation.
+Reproducible data and animation for Chinese history, planned as 24 volumes. The first two are the Neolithic and the Spring and Autumn–Warring States periods. Borders come from coordinate lists; people and their relations live once in a shared corpus, and every volume that mentions them points at the same record.
+
+The atlas is moving from territory alone to the full span of the twenty-four volumes: who was whose son, who succeeded whom, who studied under whom, and which of those claims rest on excavation rather than on a later retelling. The plan is in [docs/design/0003](docs/design/0003-full-history-architecture.md).
 
 <p align="center">
   <img src="assets/readme/showcase.webp" width="100%" alt="Side by side: in 770 BCE, 25 polities are shown in distinct colours; by 221 BCE, Qin has absorbed 35 of the 38 regions" />
@@ -34,9 +36,10 @@ Every territorial change therefore traces back to a year and a source, and can b
 
 ## Demos
 
-| Demo                                                        | Period        | Content                                                   |
-| ----------------------------------------------------------- | ------------- | --------------------------------------------------------- |
-| [Spring and Autumn, Warring States](demos/chunqiu-zhanguo/) | 770 – 221 BCE | 38 historical regions, 29 polities, 68 events, 15 battles |
+| Demo                                                        | Period          | Content                                                    |
+| ----------------------------------------------------------- | --------------- | ---------------------------------------------------------- |
+| [Spring and Autumn, Warring States](demos/chunqiu-zhanguo/) | 770 – 221 BCE   | 38 historical regions, 29 polities, 68 events, 15 battles  |
+| [Ancestors](demos/zuxian/)                                  | 7000 – 1900 BCE | 39 regions, 17 archaeological cultures, 46 events, 9 sites |
 
 To add a new subject, see [docs/adding-a-demo.md](docs/adding-a-demo.md).
 
@@ -55,23 +58,33 @@ Double-clicking `index.html` works too. There is no build step, no runtime depen
 Running the checks does need Node 18 or newer:
 
 ```bash
-node scripts/check.mjs
+node scripts/check.mjs   # data integrity, links, demo registration
+npx prettier --check .   # formatting
 ```
+
+Both should pass before a pull request. The conventions behind them are in [AGENTS.md](AGENTS.md).
 
 ## Layout
 
 ```
 chrono-atlas/
 ├── index.html              gallery page
-├── demos/                  one directory per demo
-│   └── chunqiu-zhanguo/
-│       ├── index.html      page structure
-│       ├── data.js         all data
-│       ├── app.js          rendering and interaction
-│       ├── style.css       demo-specific styles
-│       └── README.md       sources and known simplifications
+├── catalog/manifest.js     the 24 volumes: number, title, period, status, chapters
+├── corpus/                 people, polities, places, texts and their relations, shared
+│   ├── schema.js           controlled vocabulary for entities and relations
+│   ├── people/<era>.js     one record per person, sharded by era not by volume
+│   └── relations/<era>.js  kinship, succession, teachers, rivals
+├── demos/                  one directory per volume's view
+│   ├── chunqiu-zhanguo/
+│   │   ├── index.html      page structure
+│   │   ├── data.js         all data for this volume
+│   │   ├── app.js          rendering and interaction
+│   │   ├── style.css       demo-specific styles
+│   │   └── README.md       sources and known simplifications
+│   └── zuxian/
+│       └── …               same five files
 ├── assets/site.css         shared site styles
-├── docs/                   data format, how to add a demo, Chinese README
+├── docs/                   data format, architecture decisions, Chinese README
 └── scripts/check.mjs       zero-dependency checks
 ```
 
@@ -81,7 +94,7 @@ Data and rendering are kept strictly apart: `data.js` contains no DOM operation,
 
 Static, no build, no dependencies. This is not a rejection of tooling but a bet that these pages should still open ten years from now.
 
-The cost is no component reuse, and no shared engine until a second demo exists. Abstraction should grow out of repetition, not out of anticipation.
+The second demo made the cost of that bet concrete. The drawing code is duplicated almost line for line, and that duplication is accepted. What did not transfer was the vocabulary: a culture replacing another is not a state destroying one, and a legend is not an excavation. Those differences live in the data (`META.terms`, `shift` events, `src` tags) rather than in a shared engine. The reasoning is in [docs/design/0002](docs/design/0002-second-demo-and-data-semantics.md).
 
 ## Contributing
 

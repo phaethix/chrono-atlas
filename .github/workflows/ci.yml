@@ -32,6 +32,24 @@ jobs:
       - name: 运行自检
         run: node scripts/check.mjs
 
+  format:
+    name: 格式
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出
+        uses: actions/checkout@v7
+
+      - name: 准备 Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # 唯一依赖外部工具的一步。版本与 package.json 里锁定的相同，
+      # 本地 npx prettier --check . 通过，这里就不会失败。
+      # demos/ 下的三个文件在 .prettierignore 里，这是刻意的例外。
+      - name: 检查格式
+        run: npx --yes prettier@3.9.10 --check .
+
   commits:
     name: 提交信息
     runs-on: ubuntu-latest

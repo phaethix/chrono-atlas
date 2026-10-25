@@ -21,6 +21,14 @@ const DEMOS_DIR = path.join(ROOT, 'demos');
 
 const REQUIRED_DEMO_FILES = ['index.html', 'data.js', 'app.js', 'style.css', 'README.md'];
 
+/**
+ * 枚举值集中在这里。写错一个 t，动画会静默不触发；写错 src，
+ * 传说就会被当成考古读。这类错误肉眼极难发现，只能靠脚本拦。
+ */
+const EVENT_TYPES = ['normal', 'shift', 'merge', 'era'];
+const SOURCE_TYPES = ['arch', 'legend', 'text'];
+const SITE_KINDS = ['battle', 'site'];
+
 const errors = [];
 const warnings = [];
 let checks = 0;
@@ -86,6 +94,39 @@ function validateDemo(demoName, dir) {
   }
   if (META.from >= META.to) {
     fail(where, `META.from (${META.from}) 应小于 META.to (${META.to})`);
+  }
+
+  /* rate：播放速率。跨度大的题材必须单独给，否则一趟播放要半小时 */
+  if (META.rate !== undefined) {
+    if (typeof META.rate !== 'number' || !Number.isFinite(META.rate) || META.rate <= 0) {
+      fail(where, `META.rate 应为正数，当前为 ${META.rate}`);
+    } else {
+      const seconds = (META.to - META.from) / META.rate;
+      if (seconds > 600) {
+        warn(where, `按 META.rate 播完全程需 ${Math.round(seconds)} 秒，考虑调大速率`);
+      }
+    }
+  }
+
+  /* ticks：时间轴刻度。必须落在区间内、递增、有显示文本 */
+  if (META.ticks !== undefined) {
+    if (!Array.isArray(META.ticks) || !META.ticks.length) {
+      fail(where, 'META.ticks 应为非空数组');
+    } else {
+      let prevTick = -Infinity;
+      for (const [i, tick] of META.ticks.entries()) {
+        if (typeof tick.y !== 'number') {
+          fail(where, `META.ticks[${i}] 的 y 必须是数字`);
+          continue;
+        }
+        if (tick.y < META.from || tick.y > META.to) {
+          fail(where, `META.ticks[${i}] 年份 ${tick.y} 超出演示区间`);
+        }
+        if (tick.y < prevTick) fail(where, `META.ticks[${i}] 未按年份递增`);
+        prevTick = tick.y;
+        if (!tick.t) fail(where, `META.ticks[${i}] 缺少显示文本 t`);
+      }
+    }
   }
   ok();
 
@@ -166,6 +207,17 @@ function validateDemo(demoName, dir) {
     prevYear = e.y;
     if (!e.s) fail(where, `${at} 缺少描述 s`);
 
+    if (e.t !== undefined && !EVENT_TYPES.includes(e.t)) {
+      fail(where, `${at} 的事件类型 t='${e.t}' 不在 ${EVENT_TYPES.join(' / ')} 之内`);
+    }
+    if (e.src !== undefined && !SOURCE_TYPES.includes(e.src)) {
+      fail(where, `${at} 的证据性质 src='${e.src}' 不在 ${SOURCE_TYPES.join(' / ')} 之内`);
+    }
+    if (e.ch && (!e.t || e.t === 'normal')) {
+      // 带归属变更却写成 normal：地图照样变色，但时间轴不记刻度、播放也不停顿
+      warn(where, `${at} (${e.y}) 带 ch 却标为 normal，时间轴不会标出这次变更`);
+    }
+
     for (const [region, owner] of Object.entries(e.ch || {})) {
       if (!regionKeys.has(region)) fail(where, `${at} (${e.y}) 变更了不存在的区域：${region}`);
       if (!powerKeys.has(owner)) {
@@ -187,6 +239,9 @@ function validateDemo(demoName, dir) {
       fail(where, `${at} 经纬度不合法`);
     }
     if (!b.n) fail(where, `${at} 缺少名称 n`);
+    if (b.kind !== undefined && !SITE_KINDS.includes(b.kind)) {
+      fail(where, `${at} 的 kind='${b.kind}' 不在 ${SITE_KINDS.join(' / ')} 之内`);
+    }
   }
   ok();
 
@@ -198,6 +253,28 @@ function validateDemo(demoName, dir) {
   for (const [i, era] of (ERAS || []).entries()) {
     if (typeof era.from !== 'number' || typeof era.to !== 'number' || !era.name) {
       fail(where, `ERAS[${i}] 需要 from / to / name`);
+    }
+  }
+
+  /* 阶段必须首尾对齐、中间不留缝也不重叠，否则侧栏的时期标签会找不到归属 */
+  if ((ERAS || []).length) {
+    const eras = [...ERAS].sort((a, b) => a.from - b.from);
+    if (eras[0].from !== META.from) {
+      fail(where, `ERAS 首段从 ${eras[0].from} 开始，应为 META.from (${META.from})`);
+    }
+    if (eras[eras.length - 1].to !== META.to) {
+      fail(where, `ERAS 末段到 ${eras[eras.length - 1].to} 为止，应为 META.to (${META.to})`);
+    }
+    for (let i = 1; i < eras.length; i++) {
+      if (eras[i].from !== eras[i - 1].to) {
+        fail(
+          where,
+          `ERAS 第 ${i} 段从 ${eras[i].from} 开始，与前一段的结尾 ${eras[i - 1].to} 不衔接`,
+        );
+      }
+    }
+    for (const [i, era] of eras.entries()) {
+      if (era.from >= era.to) fail(where, `ERAS[${i}] 的 from 应小于 to`);
     }
   }
   ok();
@@ -408,6 +485,236 @@ function checkGallery(demoDirs) {
   ok();
 }
 
+/* ---------- 6. 语料层 ---------- */
+
+const CORPUS_DIR = path.join(ROOT, 'corpus');
+const CATALOG_FILE = path.join(ROOT, 'catalog', 'manifest.js');
+
+/**
+ * 语料是普通脚本，靠往 globalThis.CORPUS 上注册来工作。
+ * 这里按 core → schema → 分片的顺序在同一个 vm 上下文里跑一遍，
+ * 拿到完整的实体表与关系表。
+ */
+function loadCorpus() {
+  const ctx = vm.createContext({});
+  const run = (file) => {
+    vm.runInContext(fs.readFileSync(file, 'utf8'), ctx, { filename: file, timeout: 5000 });
+  };
+
+  run(path.join(CORPUS_DIR, 'core.js'));
+  const schemaFile = path.join(CORPUS_DIR, 'schema.js');
+  vm.runInContext(`${fs.readFileSync(schemaFile, 'utf8')}\n;globalThis.SCHEMA = SCHEMA;`, ctx, {
+    filename: schemaFile,
+  });
+
+  const shards = collectFiles(CORPUS_DIR, ['.js'])
+    .filter((f) => !f.endsWith(`${path.sep}core.js`) && !f.endsWith(`${path.sep}schema.js`))
+    .sort();
+  for (const file of shards) run(file);
+
+  return { corpus: ctx.CORPUS, schema: ctx.SCHEMA, shards: shards.length };
+}
+
+/** 亲子关系不允许成环。族谱里出现环，说明父子录反了。 */
+function findKinshipCycle(edges) {
+  const out = new Map();
+  for (const e of edges) {
+    if (!out.has(e.from)) out.set(e.from, []);
+    out.get(e.from).push(e.to);
+  }
+  const state = new Map(); // 1 访问中，2 已完成
+  const walk = (node, trail) => {
+    if (state.get(node) === 1) return [...trail, node];
+    if (state.get(node) === 2) return null;
+    state.set(node, 1);
+    for (const next of out.get(node) || []) {
+      const hit = walk(next, [...trail, node]);
+      if (hit) return hit;
+    }
+    state.set(node, 2);
+    return null;
+  };
+  for (const node of out.keys()) {
+    const hit = walk(node, []);
+    if (hit) return hit;
+  }
+  return null;
+}
+
+function checkCorpus() {
+  if (!fs.existsSync(CORPUS_DIR)) {
+    fail('corpus', '缺少语料目录');
+    return {};
+  }
+
+  let loaded;
+  try {
+    loaded = loadCorpus();
+  } catch (e) {
+    fail('corpus', `分片求值失败：${e.message}`);
+    return {};
+  }
+
+  const { corpus, schema, shards } = loaded;
+  if (!corpus || !schema) {
+    fail('corpus', '未拿到 CORPUS 或 SCHEMA');
+    return {};
+  }
+
+  const byKind = {
+    person: corpus.people,
+    polity: corpus.polities,
+    place: corpus.places,
+    text: corpus.texts,
+  };
+  const kindOf = new Map();
+
+  for (const [kind, table] of Object.entries(byKind)) {
+    for (const [id, entity] of Object.entries(table || {})) {
+      const at = `corpus/${kind}/${id}`;
+      if (!new RegExp(`^${kind}-[a-z0-9-]+$`).test(id)) {
+        fail('corpus', `${at}: id 应形如 ${kind}-<小写拉丁 slug>`);
+      }
+      if (kindOf.has(id)) {
+        fail('corpus', `${at}: id 与 ${kindOf.get(id)} 里的实体重复`);
+      }
+      kindOf.set(id, kind);
+
+      const spec = schema.entities[kind];
+      for (const field of spec.required) {
+        if (!entity[field]) fail(at, `缺少必填字段 ${field}`);
+      }
+      if (entity.alias !== undefined && !Array.isArray(entity.alias)) {
+        fail(at, 'alias 应为数组');
+      }
+      for (const field of ['from', 'to']) {
+        if (entity[field] !== undefined && entity[field] !== null) {
+          if (typeof entity[field] !== 'number' || !Number.isFinite(entity[field])) {
+            fail(at, `${field} 应为年份数字（公元前用负数），未知就写 null`);
+          }
+        }
+      }
+      if (
+        typeof entity.from === 'number' &&
+        typeof entity.to === 'number' &&
+        entity.from > entity.to
+      ) {
+        fail(at, `生年 ${entity.from} 晚于卒年 ${entity.to}`);
+      }
+      if (entity.src !== undefined && !schema.src.includes(entity.src)) {
+        fail(at, `src='${entity.src}' 不在 ${schema.src.join(' / ')} 之内`);
+      }
+    }
+  }
+
+  const relations = Array.isArray(corpus.relations) ? corpus.relations : [];
+  const seenEdge = new Set();
+  for (const [i, e] of relations.entries()) {
+    const at = `corpus/relations[${i}]`;
+    const spec = schema.relations[e.kind];
+    if (!spec) {
+      fail(at, `未知关系类型 kind='${e.kind}'`);
+      continue;
+    }
+    for (const end of ['from', 'to']) {
+      if (!e[end]) {
+        fail(at, `缺少 ${end}`);
+        continue;
+      }
+      const kind = kindOf.get(e[end]);
+      if (!kind) {
+        fail(at, `${end} 指向不存在的实体：${e[end]}`);
+      } else if (!spec[end].includes(kind)) {
+        fail(at, `${e.kind} 的 ${end} 应为 ${spec[end].join(' / ')}，实际是 ${kind}`);
+      }
+    }
+    if (e.role !== undefined && spec.roles && spec.roles.length && !spec.roles.includes(e.role)) {
+      fail(at, `${e.kind} 的 role='${e.role}' 不在 ${spec.roles.join(' / ')} 之内`);
+    }
+    if (e.src !== undefined && !schema.src.includes(e.src)) {
+      fail(at, `src='${e.src}' 不在 ${schema.src.join(' / ')} 之内`);
+    }
+    const key = `${e.from}|${e.to}|${e.kind}|${e.role || ''}`;
+    if (seenEdge.has(key)) fail(at, `重复的关系边 ${key}`);
+    seenEdge.add(key);
+  }
+
+  const cycle = findKinshipCycle(relations.filter((e) => e.kind === 'parent'));
+  if (cycle) fail('corpus', `亲子关系成环：${cycle.join(' → ')}`);
+
+  ok();
+  return {
+    people: Object.keys(corpus.people || {}).length,
+    relations: relations.length,
+    shards,
+  };
+}
+
+/* ---------- 7. 全书卷目 ---------- */
+
+function checkCatalog(demoDirs) {
+  if (!fs.existsSync(CATALOG_FILE)) {
+    fail('catalog', '缺少 catalog/manifest.js');
+    return {};
+  }
+
+  let volumes;
+  try {
+    const ctx = vm.createContext({});
+    vm.runInContext(`${fs.readFileSync(CATALOG_FILE, 'utf8')}\n;globalThis.__V = VOLUMES;`, ctx, {
+      filename: CATALOG_FILE,
+    });
+    volumes = ctx.__V;
+  } catch (e) {
+    fail('catalog', `manifest 求值失败：${e.message}`);
+    return {};
+  }
+
+  if (!Array.isArray(volumes) || !volumes.length) {
+    fail('catalog', 'VOLUMES 为空');
+    return {};
+  }
+  if (volumes.length !== 24) {
+    fail('catalog', `应为 24 卷，当前 ${volumes.length} 卷`);
+  }
+
+  const STATUS = ['planned', 'partial', 'done'];
+  const usedViews = new Set();
+
+  for (const [i, v] of volumes.entries()) {
+    const at = `catalog/卷 ${v.no}`;
+    if (v.no !== i + 1) fail(at, `卷次应为 ${i + 1}，实际 ${v.no}`);
+    if (!v.title) fail(at, '缺少书名');
+    if (!v.period) fail(at, '缺少分期');
+    if (!STATUS.includes(v.status))
+      fail(at, `status='${v.status}' 不在 ${STATUS.join(' / ')} 之内`);
+    if (v.id && !demoDirs.includes(v.id)) fail(at, `id='${v.id}' 不是 demos/ 下的目录`);
+    if (!Array.isArray(v.views)) {
+      fail(at, 'views 应为数组');
+    } else {
+      for (const view of v.views) {
+        if (!demoDirs.includes(view)) fail(at, `views 指向不存在的演示：${view}`);
+        usedViews.add(view);
+      }
+    }
+    if (!Array.isArray(v.chapters) || !v.chapters.length) {
+      fail(at, 'chapters 应为非空数组');
+    }
+  }
+
+  for (const demo of demoDirs) {
+    if (!usedViews.has(demo)) fail('catalog', `演示 ${demo} 没有登记到任何一卷`);
+  }
+
+  ok();
+  return {
+    total: volumes.length,
+    done: volumes.filter((v) => v.status === 'done').length,
+    partial: volumes.filter((v) => v.status === 'partial').length,
+    chapters: volumes.reduce((n, v) => n + (v.chapters || []).length, 0),
+  };
+}
+
 /* ---------- 主流程 ---------- */
 
 function main() {
@@ -430,6 +737,8 @@ function main() {
   }
 
   checkGallery(demoDirs);
+  const catalog = checkCatalog(demoDirs);
+  const corpus = checkCorpus();
   const readmes = checkReadmes();
   const links = checkLinks();
 
@@ -440,6 +749,15 @@ function main() {
       ? `  区域 ${s.regionCount} · 势力 ${s.powerCount} · 事件 ${s.eventCount}`
       : '  （数据未通过校验）';
     console.log(`  演示 ${s.name}${detail}`);
+  }
+
+  if (catalog.total) {
+    console.log(
+      `  卷目 ${catalog.total} · 已成视图 ${catalog.done} · 部分录入 ${catalog.partial} · 章目 ${catalog.chapters}`,
+    );
+  }
+  if (corpus.people !== undefined) {
+    console.log(`  语料 人物 ${corpus.people} · 关系 ${corpus.relations} · 分片 ${corpus.shards}`);
   }
 
   const readmeNote =

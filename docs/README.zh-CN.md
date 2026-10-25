@@ -16,7 +16,9 @@
   <a href="../README.md"><img src="https://img.shields.io/badge/docs-English-1C1917" alt="English documentation" /></a>
 </p>
 
-中国历史疆域变迁的可复现数据与动画。第一个演示是春秋战国，五百五十年间的兼并。
+中国历史的可复现数据与动画，按 24 卷规划。前两个演示是史前与春秋战国：边界来自坐标列表，人物与关系在全库只存一份，哪一卷提到都指向同一条记录。
+
+这套图集正从「只有疆域」扩到二十四卷的跨度：谁是谁的儿子、谁继了谁的位、谁师承于谁，以及这些说法里哪些出自发掘、哪些出自后世的追述。方案见 [design/0003](design/0003-full-history-architecture.md)。
 
 <p align="center">
   <img src="../assets/readme/showcase.webp" width="100%" alt="左右对比：前 770 年有 25 个势力各自异色，前 221 年秦已吞并 38 个区域中的 35 个" />
@@ -34,9 +36,10 @@
 
 ## 演示
 
-| 演示                                               | 区间            | 内容                                           |
-| -------------------------------------------------- | --------------- | ---------------------------------------------- |
-| [春秋战国 · 疆域与兼并](../demos/chunqiu-zhanguo/) | 前 770 — 前 221 | 38 个历史区域，29 个势力，68 条事件，15 场战役 |
+| 演示                                               | 区间              | 内容                                            |
+| -------------------------------------------------- | ----------------- | ----------------------------------------------- |
+| [春秋战国 · 疆域与兼并](../demos/chunqiu-zhanguo/) | 前 770 — 前 221   | 38 个历史区域，29 个势力，68 条事件，15 场战役  |
+| [祖先 · 从蛙到龙](../demos/zuxian/)                | 前 7000 — 前 1900 | 39 个区域，17 支考古学文化，46 条事件，9 处遗址 |
 
 想加新题材，见 [adding-a-demo.md](adding-a-demo.md)。
 
@@ -55,23 +58,33 @@ open index.html
 想跑校验则需要 Node 18 以上：
 
 ```bash
-node scripts/check.mjs
+node scripts/check.mjs   # 数据完整性、站内链接、演示登记
+npx prettier --check .   # 格式
 ```
+
+两条都通过再提 PR。背后的约定见 [AGENTS.md](../AGENTS.md)。
 
 ## 目录结构
 
 ```
 chrono-atlas/
 ├── index.html              画廊首页
-├── demos/                  每个演示一个目录
-│   └── chunqiu-zhanguo/
-│       ├── index.html      页面骨架
-│       ├── data.js         全部数据
-│       ├── app.js          渲染与交互
-│       ├── style.css       本演示样式
-│       └── README.md       史料依据与已知简化
+├── catalog/manifest.js     24 卷：卷次、书名、分期、状态、章目
+├── corpus/                 跨卷共享的人物、群体、地点、文献与关系
+│   ├── schema.js           实体与关系的词表
+│   ├── people/<era>.js     人物分片，按时代切，不按卷切
+│   └── relations/<era>.js  血缘、继位、师承、敌对
+├── demos/                  每册书一个视图目录
+│   ├── chunqiu-zhanguo/
+│   │   ├── index.html      页面骨架
+│   │   ├── data.js         本卷数据
+│   │   ├── app.js          渲染与交互
+│   │   ├── style.css       本演示样式
+│   │   └── README.md       史料依据与已知简化
+│   └── zuxian/
+│       └── …               同样五个文件
 ├── assets/site.css         站点级共享样式
-├── docs/                   数据格式、新增演示的说明、中文 README
+├── docs/                   数据格式、架构决策、中文 README
 └── scripts/check.mjs       零依赖自检
 ```
 
@@ -81,7 +94,7 @@ chrono-atlas/
 
 纯静态、零构建、零依赖。这样做不是排斥工具链，而是希望十年后这些页面仍然能打开。
 
-代价是没有组件复用，第二个演示出现前也不打算抽公共引擎。抽象应当从重复中长出来，而不是从预判中。
+第二个演示把这个选择的代价摆到了明处：画法几乎逐行重复，这份重复被接受了。真正没能通用的不是画法，而是用词——文化取代文化，不是国家灭了国家；传说也不等于发掘。这些差异被放进数据（`META.terms`、`shift` 事件、`src` 标签），而不是抽一层引擎。理由见 [design/0002](design/0002-second-demo-and-data-semantics.md)。
 
 ## 贡献
 

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>国家 · 从部落到文明 | 时空图集</title>
+    <meta
+      name="description"
+      content="《国家》第二卷：国家为什么会有，城市为什么是钥匙，图腾谢幕后的三条路，以及三代为什么不能叫三朝。"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="title">
+        <span class="eyebrow">中华史 · 第二卷</span>
+        <h1>国家 <em>从部落到文明</em></h1>
+      </div>
+      <p class="lede">国家诞生，文明就诞生了。历史从此一分为二：之前叫史前史，之后叫文明史。</p>
+    </header>
+
+    <div class="civs">
+      <p class="cap" id="civCap"></p>
+      <div class="chips" id="civs"></div>
+    </div>
+
+    <nav class="tabs" id="tabs" aria-label="分节"></nav>
+
+    <main id="panel" aria-live="polite"></main>
+
+    <div class="controls">
+      <button class="primary" id="btnPlay">播放</button>
+      <button id="btnPrev">上一节</button>
+      <button id="btnNext">下一节</button>
+      <button id="btnReset">回到开头</button>
+      <p class="caption" id="stepText">四节：城市、两条路、图腾、三代。</p>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

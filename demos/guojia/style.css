@@ -1,0 +1,305 @@
+:root {
+  --bg: #0b0f16;
+  --panel: #111925;
+  --line: #1d2735;
+  --text: #e6ecf3;
+  --muted: #8b98a8;
+  --dim: #5b6879;
+  --faint: #3d4a5c;
+  --accent: #d4a017;
+  --accent2: #e8c25a;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+header {
+  padding: 24px 48px 0;
+  max-width: 1180px;
+  width: 100%;
+  margin: 0 auto;
+}
+.eyebrow {
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  color: var(--dim);
+  text-transform: uppercase;
+}
+h1 {
+  margin: 8px 0 0;
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  font-family: 'Songti SC', 'STSong', 'SimSun', serif;
+}
+h1 em {
+  font-style: normal;
+  font-size: 13px;
+  color: var(--accent2);
+  margin-left: 10px;
+  letter-spacing: 0.06em;
+  font-family: inherit;
+  font-weight: 400;
+}
+.lede {
+  margin: 8px 0 0;
+  max-width: 640px;
+  font-size: 12.5px;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+/* ---------- 卷首 ---------- */
+.civs {
+  width: 100%;
+  max-width: 1180px;
+  margin: 16px auto 0;
+  padding: 0 48px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.civs .cap {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--dim);
+}
+.civs .chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.civs .chips span {
+  font-size: 11.5px;
+  padding: 3px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+}
+
+/* ---------- 标签 ---------- */
+.tabs {
+  width: 100%;
+  max-width: 1180px;
+  margin: 18px auto 0;
+  padding: 0 48px;
+  display: flex;
+  gap: 26px;
+  border-bottom: 1px solid var(--line);
+}
+.tab {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0 0 10px;
+  font-family: inherit;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--dim);
+  cursor: pointer;
+  position: relative;
+  transition: color 0.16s;
+}
+.tab::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: transparent;
+  transition: background 0.16s;
+}
+.tab:hover {
+  color: var(--muted);
+}
+.tab.on {
+  color: var(--accent2);
+}
+.tab.on::after {
+  background: var(--accent);
+}
+
+/* ---------- 面板 ---------- */
+main {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 20px 48px 16px;
+  display: flex;
+  overflow-y: auto;
+}
+main .inner {
+  margin: auto 0;
+  width: 100%;
+}
+.head h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  font-family: 'Songti SC', 'STSong', 'SimSun', serif;
+}
+.head .lead {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--accent2);
+  line-height: 1.7;
+}
+.items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+.item {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+}
+.item .top {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.item h3 {
+  margin: 0;
+  font-size: 27px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  font-family: 'Songti SC', 'STSong', serif;
+  line-height: 1.1;
+}
+.item .top span {
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  color: var(--dim);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+.item ul {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+.item li {
+  position: relative;
+  padding: 0 0 8px 12px;
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: #b9c5d2;
+}
+.item li:last-child {
+  padding-bottom: 0;
+}
+.item li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 4px;
+  height: 1px;
+  background: var(--faint);
+}
+.note {
+  margin: 16px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.note em {
+  font-style: normal;
+  color: var(--faint);
+  margin-left: 10px;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+}
+
+/* ---------- 控制条 ---------- */
+.controls {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 12px 48px 16px;
+  border-top: 1px solid var(--line);
+}
+button {
+  font-family: inherit;
+  font-size: 12px;
+  color: #cfd9e4;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.16s,
+    border-color 0.16s;
+}
+button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+button.primary {
+  background: linear-gradient(180deg, rgba(212, 160, 23, 0.26), rgba(212, 160, 23, 0.14));
+  border-color: rgba(212, 160, 23, 0.5);
+  color: #f2d891;
+  font-weight: 600;
+  min-width: 78px;
+}
+.caption {
+  margin: 0 0 0 10px;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+@media (max-width: 960px) {
+  header,
+  .civs,
+  .tabs,
+  main,
+  .controls {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .tabs {
+    gap: 18px;
+    overflow-x: auto;
+  }
+  .controls {
+    flex-wrap: wrap;
+  }
+  .caption {
+    flex: 1 0 100%;
+    margin: 6px 0 0;
+  }
+}

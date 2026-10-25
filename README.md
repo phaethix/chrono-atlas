@@ -18,7 +18,7 @@
 
 [Browse online](https://phaethix.github.io/chrono-atlas/) · [People and stages](https://phaethix.github.io/chrono-atlas/demos/renwu/index.html) · [Chinese version](docs/README.zh-CN.md)
 
-A Chinese history atlas planned as twenty-four volumes, three of which have a chart. Volume one is a chart of people and stages; volume two sets the three dynasties side by side; volume five, from Spring and Autumn to Warring States, is a territorial animation. Borders come from coordinate lists, people and their relations from a shared corpus, and every entry names the chapter it rests on.
+A Chinese history atlas planned as twenty-four volumes, three of which have a chart. Volume one is a chart of people and stages; volume two takes the state apart in four sections; volume five, from Spring and Autumn to Warring States, is a territorial animation. Borders come from coordinate lists, people and their relations from a shared corpus, and every entry names the chapter it rests on.
 
 The gallery lists all twenty-four volumes and marks the three that exist. That list is generated from `catalog/manifest.js`, which is also what the checks read — there is no second copy to fall out of date.
 
@@ -41,7 +41,7 @@ Every entry therefore traces back to a year, a chapter and a source, and can be 
 | Vol. | Chart                                                       | Content                                               |
 | ---- | ----------------------------------------------------------- | ----------------------------------------------------- |
 | 1    | [People and stages](demos/renwu/)                           | 15 figures, 6 stages, 19 relations, 2 rejected claims |
-| 2    | [Three dynasties](demos/sandai/)                            | 3 columns, 3 steps, one Egypt-versus-China contrast   |
+| 2    | [The state](demos/guojia/)                                  | 4 sections: city, two paths, totem, three dynasties   |
 | 5    | [Spring and Autumn, Warring States](demos/chunqiu-zhanguo/) | 38 regions, 29 polities, 69 events, 15 battles        |
 
 The other twenty-one are catalogued but unbuilt: number, title, period and chapter headings are recorded in [`catalog/manifest.js`](catalog/manifest.js). To add one, see [docs/design/0003](docs/design/0003-full-history-architecture.md) for the order of work and [docs/adding-a-demo.md](docs/adding-a-demo.md) for the mechanics.

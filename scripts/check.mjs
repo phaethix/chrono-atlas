@@ -28,7 +28,7 @@ const REQUIRED_DEMO_FILES = ['index.html', 'data.js', 'app.js', 'style.css', 'RE
 const EVENT_TYPES = ['normal', 'shift', 'merge', 'era'];
 const SOURCE_TYPES = ['arch', 'legend', 'text'];
 const SITE_KINDS = ['battle', 'site'];
-const VIEW_KINDS = ['map', 'kin', 'compare'];
+const VIEW_KINDS = ['map', 'kin', 'sections'];
 
 const errors = [];
 const warnings = [];
@@ -61,6 +61,7 @@ function loadDemoData(dataFile) {
     'NOTES',
     'STEPS',
     'COLUMNS',
+    'SECTIONS',
   ];
   const probe = `({${names
     .map((n) => `${n}: typeof ${n} === 'undefined' ? undefined : ${n}`)
@@ -132,35 +133,44 @@ function validateDemo(demoName, dir, corpusIds) {
     return { view, steps: Array.isArray(steps) ? steps.length : 0 };
   }
 
-  if (view === 'compare') {
-    /* 对照视图：本身带列与进程，不依赖语料 */
-    const cols = data.COLUMNS;
-    if (!Array.isArray(cols) || !cols.length) {
-      fail(where, 'compare 视图的 data.js 需要非空 COLUMNS 数组');
+  if (view === 'sections') {
+    /* 分节视图：几节并排内容，一次显示一节；不依赖语料，也不需要区域 */
+    const secs = data.SECTIONS;
+    if (!Array.isArray(secs) || !secs.length) {
+      fail(where, 'sections 视图的 data.js 需要非空 SECTIONS 数组');
     } else {
       const keys = new Set();
-      for (const [i, c] of cols.entries()) {
-        if (!c.key) fail(where, `COLUMNS[${i}] 缺少 key`);
-        else if (keys.has(c.key)) fail(where, `COLUMNS[${i}] 的 key 重复：${c.key}`);
-        else keys.add(c.key);
-        if (!c.name) fail(where, `COLUMNS[${i}] 缺少 name`);
-        if (!Array.isArray(c.facts) || !c.facts.length) {
-          fail(where, `COLUMNS[${i}] 缺少 facts`);
+      for (const [i, sec] of secs.entries()) {
+        if (!sec.key) fail(where, `SECTIONS[${i}] 缺少 key`);
+        else if (keys.has(sec.key)) fail(where, `SECTIONS[${i}] 的 key 重复：${sec.key}`);
+        else keys.add(sec.key);
+        for (const field of ['tab', 'title', 'lead']) {
+          if (!sec[field]) fail(where, `SECTIONS[${i}] 缺少 ${field}`);
+        }
+        if (!Array.isArray(sec.items) || !sec.items.length) {
+          fail(where, `SECTIONS[${i}] 缺少 items`);
+          continue;
+        }
+        for (const [j, item] of sec.items.entries()) {
+          if (!item.name) fail(where, `SECTIONS[${i}].items[${j}] 缺少 name`);
+          if (!Array.isArray(item.points) || !item.points.length) {
+            fail(where, `SECTIONS[${i}].items[${j}] 缺少 points`);
+          }
         }
       }
       const steps = data.STEPS;
       if (!Array.isArray(steps) || !steps.length) {
-        fail(where, 'compare 视图的 data.js 需要非空 STEPS 数组');
+        fail(where, 'sections 视图的 data.js 需要非空 STEPS 数组');
       } else {
-        for (const [i, s2] of steps.entries()) {
-          if (!s2.focus) fail(where, `STEPS[${i}] 缺少 focus`);
-          else if (!keys.has(s2.focus)) fail(where, `STEPS[${i}] 指向不存在的列：${s2.focus}`);
-          if (!s2.text) fail(where, `STEPS[${i}] 缺少旁白 text`);
+        for (const [i, st] of steps.entries()) {
+          if (!st.focus) fail(where, `STEPS[${i}] 缺少 focus`);
+          else if (!keys.has(st.focus)) fail(where, `STEPS[${i}] 指向不存在的节：${st.focus}`);
+          if (!st.text) fail(where, `STEPS[${i}] 缺少旁白 text`);
         }
       }
     }
     ok();
-    return { view, columns: Array.isArray(cols) ? cols.length : 0 };
+    return { view, sections: Array.isArray(secs) ? secs.length : 0 };
   }
 
   for (const key of ['from', 'to']) {
@@ -837,7 +847,7 @@ function main() {
   for (const s of summaries) {
     let detail = '  （数据未通过校验）';
     if (s.view === 'kin') detail = `  关系视图 · 进程 ${s.steps}`;
-    else if (s.view === 'compare') detail = `  对照视图 · ${s.columns} 列`;
+    else if (s.view === 'sections') detail = `  分节视图 · ${s.sections} 节`;
     else if (s.regionCount) {
       detail = `  区域 ${s.regionCount} · 势力 ${s.powerCount} · 事件 ${s.eventCount}`;
     }

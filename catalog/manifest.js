@@ -23,10 +23,10 @@ const VOLUMES = [
   {
     no: 1,
     title: '祖先',
-    id: 'zuxian',
     period: '史前',
     status: 'done',
-    views: ['zuxian', 'shixi'],
+    views: ['renwu'],
+    note: '只覆盖人物与阶段；制度、器物与论证尚未录入。',
     chapters: ['第一章 夏娃造反', '第二章 女娲登坛', '第三章 伏羲设局', '第四章 炎帝东征', '第五章 黄帝出场', '第六章 尧舜下课'],
   },
   {

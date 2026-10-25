@@ -18,7 +18,7 @@
 
 [Browse online](https://phaethix.github.io/chrono-atlas/) · [First demo](https://phaethix.github.io/chrono-atlas/demos/chunqiu-zhanguo/index.html) · [Chinese version](docs/README.zh-CN.md)
 
-Reproducible data and animation for Chinese history, planned as 24 volumes. The first two are the Neolithic and the Spring and Autumn–Warring States periods. Borders come from coordinate lists; people and their relations live once in a shared corpus, and every volume that mentions them points at the same record.
+Reproducible data and animation for Chinese history, planned as 24 volumes. Two are in progress: the first volume as a chart of people and stages, the Spring and Autumn–Warring States period as a territorial animation. Borders come from coordinate lists; people and their relations live once in a shared corpus, and every volume that mentions them points at the same record. Every claim is traceable to the book it comes from.
 
 The atlas is moving from territory alone to the full span of the twenty-four volumes: who was whose son, who succeeded whom, who studied under whom, and which of those claims rest on excavation rather than on a later retelling. The plan is in [docs/design/0003](docs/design/0003-full-history-architecture.md).
 
@@ -36,11 +36,10 @@ Every territorial change therefore traces back to a year and a source, and can b
 
 ## Demos
 
-| Demo                                                        | Period          | Content                                                    |
-| ----------------------------------------------------------- | --------------- | ---------------------------------------------------------- |
-| [Spring and Autumn, Warring States](demos/chunqiu-zhanguo/) | 770 – 221 BCE   | 38 historical regions, 29 polities, 68 events, 15 battles  |
-| [Ancestors](demos/zuxian/)                                  | 7000 – 1900 BCE | 39 regions, 17 archaeological cultures, 46 events, 9 sites |
-| [Five Emperors](demos/shixi/)                               | legendary       | 20 people, 35 kinship, succession and rivalry edges        |
+| Demo                                                        | Period        | Content                                                       |
+| ----------------------------------------------------------- | ------------- | ------------------------------------------------------------- |
+| [Spring and Autumn, Warring States](demos/chunqiu-zhanguo/) | 770 – 221 BCE | 38 historical regions, 29 polities, 68 events, 15 battles     |
+| [People and stages](demos/renwu/)                           | legendary     | 15 figures, 6 stages, one succession chain, 2 rejected claims |
 
 To add a new subject, see [docs/adding-a-demo.md](docs/adding-a-demo.md).
 

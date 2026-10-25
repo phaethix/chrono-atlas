@@ -38,6 +38,9 @@ const SCHEMA = {
   /* 证据性质。arch 考古、legend 神话与追述、text 成文记载。 */
   src: ['arch', 'legend', 'text'],
 
+  /* 本书的判断。book 采信，rejected 明确不取。不写就是未表态，图上不画。 */
+  claims: ['book', 'rejected'],
+
   /* 关系：kind 决定两端能是什么实体，role 决定细分。 */
   relations: {
     parent: {
@@ -66,7 +69,7 @@ const SCHEMA = {
       label: '继位',
       from: ['person'],
       to: ['person'],
-      roles: ['throne', 'title', 'school'],
+      roles: ['stage', 'throne', 'title', 'school'],
       note: '前任 → 继任。兄终弟及与父死子继都走这一条。',
     },
     teacher: {

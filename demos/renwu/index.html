@@ -3,23 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>五帝世系 · 血缘与继位 | 时空图集</title>
+    <title>人物与阶段 · 从蛙到龙 | 时空图集</title>
     <meta
       name="description"
-      content="五帝谱系图：二十二个人，三十五条边。血缘按代排列，继位另画一条线，两条线对不上的地方一目了然。"
+      content="《祖先》第一卷的人物与阶段：十五个人、六个阶段，一条继位的链。本书说五帝没有血缘，图上便没有族谱。"
     />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <header>
       <div class="title">
-        <span class="eyebrow">祖先 · 第一卷 · 人物关系</span>
-        <h1>五帝世系 <em>血缘与继位</em></h1>
+        <span class="eyebrow">祖先 · 第一卷 · 人物与阶段</span>
+        <h1>从蛙到龙 <em>十五个人，六个阶段</em></h1>
       </div>
       <div class="legend">
-        <b><i class="ln kin"></i>亲子</b>
         <b><i class="ln succ"></i>继位</b>
+        <b><i class="ln kin"></i>血缘</b>
         <b><i class="ln war"></i>敌对</b>
+        <b><i class="ln reject"></i>书不取</b>
       </div>
     </header>
 
@@ -29,7 +30,7 @@
           id="map"
           viewBox="0 0 1000 720"
           preserveAspectRatio="xMidYMid meet"
-          aria-label="五帝世系图"
+          aria-label="人物与阶段关系图"
         >
           <defs>
             <marker
@@ -44,10 +45,8 @@
               <path d="M0,1 L9,5 L0,9 z" fill="#d4a017" />
             </marker>
           </defs>
-          <g id="rows"></g>
+          <g id="cols"></g>
           <g id="edges"></g>
-          <g id="succ"></g>
-          <g id="wars"></g>
           <g id="nodes"></g>
         </svg>
       </div>
@@ -76,7 +75,7 @@
       <button id="btnNext">下一步</button>
       <button id="btnReset">重置</button>
       <div class="spacer"></div>
-      <span class="hint">悬停看一支，点击看一人</span>
+      <span class="hint">悬停看一个人，点击看他的关系</span>
     </div>
 
     <script src="../../corpus/core.js"></script>

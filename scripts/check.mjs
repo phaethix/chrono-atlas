@@ -680,6 +680,13 @@ function checkCorpus() {
     if (e.src !== undefined && !schema.src.includes(e.src)) {
       fail(at, `src='${e.src}' 不在 ${schema.src.join(' / ')} 之内`);
     }
+    if (e.claim !== undefined && !schema.claims.includes(e.claim)) {
+      fail(at, `claim='${e.claim}' 不在 ${schema.claims.join(' / ')} 之内`);
+    }
+    // 本书不取的旧说，必须写明为什么，否则图上只剩一个没有理由的叉
+    if (e.claim === 'rejected' && !e.note) {
+      fail(at, 'rejected 的边必须写 note，说明本书为何不取');
+    }
     const key = `${e.from}|${e.to}|${e.kind}|${e.role || ''}`;
     if (seenEdge.has(key)) fail(at, `重复的关系边 ${key}`);
     seenEdge.add(key);

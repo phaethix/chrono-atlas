@@ -1,66 +1,44 @@
 /*!
  * 语料 · 上古的关系边
  *
- * 只写"亲 → 子"，不写"子 → 亲"；兄弟与子孙由视图反推。
- * 每条边都带 src 与 source：谱系是《史记》写下来的，不是挖出来的。
+ * 每条边都带两个判断：
+ *   claim: 'book'      本书采信
+ *   claim: 'rejected'  本书明确不取，只在图上留一个叉，用来对照
+ *
+ * 本书的立场是先破后立：五帝之间没有血缘，禅让不是礼让，鲧是禹的母亲不是父亲。
+ * 所以这张图上没有族谱，只有一条继位的链，和几组被否定的旧说。
  */
 'use strict';
 
 CORPUS.relate(
-  // 婚姻
-  { from: 'person-huangdi', to: 'person-leizu', kind: 'spouse', role: 'primary', src: 'legend', source: '《史记·五帝本纪》' },
-  { from: 'person-changyi', to: 'person-changpu', kind: 'spouse', role: 'primary', src: 'legend', source: '《史记·五帝本纪》' },
+  // 阶段代表：点 → 面 → 面 → 片 → 圈 → 国
+  { from: 'person-xiawa', to: 'person-nuwa', kind: 'succession', role: 'stage', claim: 'book', src: 'legend', source: '第一章' },
+  { from: 'person-nuwa', to: 'person-fuxi', kind: 'succession', role: 'stage', claim: 'book', src: 'legend', source: '第三章' },
+  { from: 'person-fuxi', to: 'person-yandi', kind: 'succession', role: 'stage', claim: 'book', src: 'legend', source: '第四章' },
+  { from: 'person-yandi', to: 'person-huangdi', kind: 'succession', role: 'stage', claim: 'book', src: 'legend', source: '第五章' },
 
-  // 黄帝一系
-  { from: 'person-huangdi', to: 'person-xuanxiao', kind: 'parent', role: 'father', src: 'legend', source: '《史记·五帝本纪》' },
-  { from: 'person-huangdi', to: 'person-changyi', kind: 'parent', role: 'father', src: 'legend', source: '《史记·五帝本纪》' },
-  { from: 'person-leizu', to: 'person-xuanxiao', kind: 'parent', role: 'mother', src: 'legend', source: '《史记·五帝本纪》' },
-  { from: 'person-leizu', to: 'person-changyi', kind: 'parent', role: 'mother', src: 'legend', source: '《史记·五帝本纪》' },
+  // 五帝先后：本书说他们无血缘，只有先后
+  { from: 'person-huangdi', to: 'person-zhuanxu', kind: 'succession', role: 'throne', claim: 'book', src: 'legend', source: '第六章' },
+  { from: 'person-zhuanxu', to: 'person-diku', kind: 'succession', role: 'throne', claim: 'book', src: 'legend', source: '第六章' },
+  { from: 'person-diku', to: 'person-yao', kind: 'succession', role: 'throne', claim: 'book', src: 'legend', source: '第六章' },
+  { from: 'person-yao', to: 'person-shun', kind: 'succession', role: 'throne', claim: 'book', src: 'legend', source: '第六章', note: '禅让。本书的解释是"不得不让"。' },
+  { from: 'person-shun', to: 'person-yu', kind: 'succession', role: 'throne', claim: 'book', src: 'legend', source: '第六章' },
+  { from: 'person-yu', to: 'person-qi', kind: 'succession', role: 'throne', claim: 'book', src: 'legend', source: '第六章' },
 
-  // 昌意 → 颛顼
-  { from: 'person-changyi', to: 'person-zhuanxu', kind: 'parent', role: 'father', src: 'legend', source: '《史记·五帝本纪》' },
-  { from: 'person-changpu', to: 'person-zhuanxu', kind: 'parent', role: 'mother', src: 'legend', source: '《史记·五帝本纪》' },
+  // 两场仗
+  { from: 'person-huangdi', to: 'person-yandi', kind: 'rival', claim: 'book', src: 'legend', source: '第五章', note: '阪泉之战。' },
+  { from: 'person-huangdi', to: 'person-chiyou', kind: 'rival', claim: 'book', src: 'legend', source: '第五章', note: '涿鹿之战。' },
+  { from: 'person-huangdi', to: 'person-chiyou', kind: 'killed', claim: 'book', src: 'legend', source: '第五章' },
 
-  // 玄嚣 → 蟜极 → 帝喾
-  { from: 'person-xuanxiao', to: 'person-qiaoji', kind: 'parent', role: 'father', src: 'legend', source: '《史记·五帝本纪》' },
-  { from: 'person-qiaoji', to: 'person-diku', kind: 'parent', role: 'father', src: 'legend', source: '《史记·五帝本纪》' },
+  // 本书的两个翻案
+  { from: 'person-gun', to: 'person-yu', kind: 'parent', role: 'mother', claim: 'book', src: 'legend', source: '后记', note: '鲧是禹的母亲。鱼崇拜在前，蛇崇拜在后，父子之说讲不通。' },
+  { from: 'person-yu', to: 'person-qi', kind: 'parent', role: 'father', claim: 'book', src: 'legend', source: '第六章' },
 
-  // 帝喾诸子：挚、尧、契、弃
-  { from: 'person-diku', to: 'person-zhi', kind: 'parent', role: 'father', src: 'legend', source: '《史记·五帝本纪》' },
-  { from: 'person-diku', to: 'person-yao', kind: 'parent', role: 'father', src: 'legend', source: '《史记·五帝本纪》' },
-  { from: 'person-diku', to: 'person-qi', kind: 'parent', role: 'father', src: 'legend', source: '《史记·殷本纪》' },
-  { from: 'person-diku', to: 'person-ji', kind: 'parent', role: 'father', src: 'legend', source: '《史记·周本纪》' },
+  // 联盟的部长
+  { from: 'person-yao', to: 'person-xie', kind: 'ruler', claim: 'book', src: 'legend', source: '第六章', note: '民政部长。' },
+  { from: 'person-yao', to: 'person-ji', kind: 'ruler', claim: 'book', src: 'legend', source: '第六章', note: '农业部长。' },
 
-  // 颛顼 → 穷蝉 → … → 瞽叟 → 舜
-  { from: 'person-zhuanxu', to: 'person-qiongchan', kind: 'parent', role: 'father', src: 'legend', source: '《史记·五帝本纪》' },
-  { from: 'person-qiongchan', to: 'person-jingkang', kind: 'parent', role: 'father', src: 'legend', source: '《史记·五帝本纪》' },
-  { from: 'person-jingkang', to: 'person-juwang', kind: 'parent', role: 'father', src: 'legend', source: '《史记·五帝本纪》' },
-  { from: 'person-juwang', to: 'person-qiaoniu', kind: 'parent', role: 'father', src: 'legend', source: '《史记·五帝本纪》' },
-  { from: 'person-qiaoniu', to: 'person-gusou', kind: 'parent', role: 'father', src: 'legend', source: '《史记·五帝本纪》' },
-  { from: 'person-gusou', to: 'person-shun', kind: 'parent', role: 'father', src: 'legend', source: '《史记·五帝本纪》' },
-
-  // 颛顼 → 鲧 → 禹
-  { from: 'person-zhuanxu', to: 'person-gun', kind: 'parent', role: 'father', src: 'legend', source: '《史记·夏本纪》' },
-  { from: 'person-gun', to: 'person-yu', kind: 'parent', role: 'father', src: 'legend', source: '《史记·夏本纪》' },
-
-  // 兄弟：只在史料明记同母异母处写
-  { from: 'person-xuanxiao', to: 'person-changyi', kind: 'sibling', role: 'same-mother', src: 'legend', source: '《史记·五帝本纪》' },
-  { from: 'person-zhi', to: 'person-yao', kind: 'sibling', role: 'different-mother', src: 'legend', source: '《史记·五帝本纪》' },
-  { from: 'person-qi', to: 'person-ji', kind: 'sibling', role: 'different-mother', src: 'legend', source: '《史记》殷周本纪' },
-
-  // 继位：孙继祖、族孙继位、父死子继、兄终弟及、禅让，都走同一条边
-  { from: 'person-huangdi', to: 'person-zhuanxu', kind: 'succession', role: 'throne', src: 'legend', source: '《史记·五帝本纪》', note: '孙继祖位。黄帝崩，昌意之子高阳立。' },
-  { from: 'person-zhuanxu', to: 'person-diku', kind: 'succession', role: 'throne', src: 'legend', source: '《史记·五帝本纪》', note: '族孙继位。颛顼崩，玄嚣之孙高辛立。' },
-  { from: 'person-diku', to: 'person-zhi', kind: 'succession', role: 'throne', src: 'legend', source: '《史记·五帝本纪》', note: '父死子继。' },
-  { from: 'person-zhi', to: 'person-yao', kind: 'succession', role: 'throne', src: 'legend', source: '《史记·五帝本纪》', note: '兄终弟及。挚立而不善，尧代之。' },
-  { from: 'person-yao', to: 'person-shun', kind: 'succession', role: 'throne', src: 'legend', source: '《史记·五帝本纪》', note: '禅让。' },
-  { from: 'person-shun', to: 'person-yu', kind: 'succession', role: 'throne', src: 'legend', source: '《史记·五帝本纪》', note: '禅让。' },
-
-  // 君臣
-  { from: 'person-shun', to: 'person-yu', kind: 'ruler', src: 'legend', source: '《史记·五帝本纪》' },
-
-  // 战争：不建血缘边的两个人，也能有关系
-  { from: 'person-huangdi', to: 'person-yandi', kind: 'rival', src: 'legend', source: '《史记·五帝本纪》', note: '阪泉之战。' },
-  { from: 'person-huangdi', to: 'person-chiyou', kind: 'rival', src: 'legend', source: '《史记·五帝本纪》', note: '涿鹿之战。' },
-  { from: 'person-huangdi', to: 'person-chiyou', kind: 'killed', src: 'legend', source: '《史记·五帝本纪》' }
+  // 本书明确不取的两说，留着当对照
+  { from: 'person-nuwa', to: 'person-fuxi', kind: 'spouse', claim: 'rejected', src: 'legend', source: '后记', note: '人首蛇身的夫妻或兄妹之说，本书判为谎言。' },
+  { from: 'person-yandi', to: 'person-huangdi', kind: 'sibling', claim: 'rejected', src: 'legend', source: '第四章', note: '《国语》称炎黄同出少典，本书不取。' }
 );

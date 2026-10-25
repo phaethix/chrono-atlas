@@ -80,7 +80,9 @@ function checkMessage(label, raw) {
     lines.slice(2).forEach((line, i) => {
       const withoutUrl = line.replace(/https?:\/\/\S+/g, '');
       if (withoutUrl.length > MAX_BODY_LINE) {
-        problems.push(`${label}: 正文第 ${i + 1} 行 ${withoutUrl.length} 字符，超过 ${MAX_BODY_LINE}`);
+        problems.push(
+          `${label}: 正文第 ${i + 1} 行 ${withoutUrl.length} 字符，超过 ${MAX_BODY_LINE}`,
+        );
       }
     });
   }
@@ -89,11 +91,11 @@ function checkMessage(label, raw) {
 function readRange(range) {
   let out;
   try {
-    out = execFileSync(
-      'git',
-      ['log', range, '--no-merges', '--format=%H%x1f%B%x1e'],
-      { cwd: ROOT, encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 },
-    );
+    out = execFileSync('git', ['log', range, '--no-merges', '--format=%H%x1f%B%x1e'], {
+      cwd: ROOT,
+      encoding: 'utf8',
+      maxBuffer: 32 * 1024 * 1024,
+    });
   } catch {
     // 区间不可用（例如首次推送时 before 为全零）时改为检查最近一次提交
     out = execFileSync('git', ['log', '-1', '--format=%H%x1f%B%x1e'], {

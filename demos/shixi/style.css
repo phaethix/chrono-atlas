@@ -1,0 +1,367 @@
+:root {
+  --bg: #0b0f16;
+  --panel: rgba(20, 28, 40, 0.78);
+  --line: rgba(255, 255, 255, 0.075);
+  --text: #e6edf3;
+  --muted: #8b98a8;
+  --dim: #5d6b7d;
+  --accent: #d4a017;
+  --accent2: #e8c25a;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background:
+    radial-gradient(1200px 700px at 18% -12%, #1c2939 0%, transparent 58%),
+    radial-gradient(900px 620px at 92% 112%, #19232f 0%, transparent 55%),
+    var(--bg);
+  color: var(--text);
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+header {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px 26px 12px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(20, 28, 40, 0.6), rgba(20, 28, 40, 0));
+}
+.eyebrow {
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  color: var(--dim);
+  text-transform: uppercase;
+}
+header h1 {
+  margin: 5px 0 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  font-family: 'Songti SC', 'STSong', 'SimSun', serif;
+}
+header h1 em {
+  font-style: normal;
+  font-size: 13px;
+  color: var(--accent2);
+  margin-left: 8px;
+  letter-spacing: 0.04em;
+}
+.legend {
+  display: flex;
+  gap: 14px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.legend b {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 400;
+}
+.legend .ln {
+  display: inline-block;
+  width: 22px;
+  height: 0;
+  border-top: 1.4px solid #5b6c80;
+}
+.legend .ln.succ {
+  border-top: 1.4px dashed var(--accent);
+}
+.legend .ln.war {
+  border-top: 1.4px dashed #c0392b;
+}
+
+.stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 326px;
+}
+.mapwrap {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+}
+#map {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ---------- 谱系 ---------- */
+.genline {
+  stroke: rgba(255, 255, 255, 0.045);
+  stroke-width: 1;
+}
+.genlabel {
+  fill: #445062;
+  font-size: 10px;
+  text-anchor: middle;
+  font-variant-numeric: tabular-nums;
+}
+.edge {
+  fill: none;
+  transition: opacity 0.25s;
+}
+.edge.kin {
+  stroke: #46566a;
+  stroke-width: 1.3;
+}
+.edge.succ {
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+}
+.edge.war {
+  stroke: #c0392b;
+  stroke-width: 1.2;
+  stroke-dasharray: 3 4;
+}
+.edge.war.kill {
+  stroke-dasharray: none;
+}
+.edge.dim {
+  opacity: 0.12;
+}
+.edge.on {
+  opacity: 1;
+}
+.edge.succ.on {
+  stroke-width: 2;
+}
+
+.node {
+  cursor: pointer;
+  transition: opacity 0.25s;
+}
+.node .box {
+  fill: #141c28;
+  stroke: #3a4757;
+  stroke-width: 1.2;
+  transition:
+    stroke 0.2s,
+    fill 0.2s;
+}
+.node .name {
+  fill: #e6edf3;
+  font-size: 13.5px;
+  text-anchor: middle;
+  font-family: 'Songti SC', 'STSong', serif;
+  pointer-events: none;
+}
+.node .spouse {
+  fill: #6f7d8e;
+  font-size: 8.5px;
+  text-anchor: middle;
+  pointer-events: none;
+}
+.node.dim {
+  opacity: 0.22;
+}
+.node.hover .box {
+  stroke: #8fa3b8;
+}
+.node.on .box {
+  stroke: var(--accent2);
+  fill: #1d2532;
+}
+.node.on .name {
+  fill: #fff6dd;
+}
+
+/* ---------- 侧栏 ---------- */
+aside {
+  border-left: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(18, 25, 35, 0.72), rgba(14, 20, 28, 0.9));
+  overflow-y: auto;
+  padding: 16px 15px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+aside::-webkit-scrollbar {
+  width: 7px;
+}
+aside::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+}
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--panel);
+  padding: 13px 14px;
+}
+.panel h2 {
+  margin: 6px 0 2px;
+  font-size: 22px;
+  font-weight: 600;
+  font-family: 'Songti SC', 'STSong', serif;
+  letter-spacing: 0.04em;
+}
+.alias {
+  font-size: 11px;
+  color: var(--dim);
+  min-height: 14px;
+}
+.role {
+  margin: 9px 0 0;
+  font-size: 12px;
+  color: var(--accent2);
+}
+.note {
+  margin: 8px 0 0;
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.facts {
+  margin: 11px 0 0;
+  padding-top: 9px;
+  border-top: 1px solid var(--line);
+  font-size: 11.5px;
+}
+.facts div {
+  display: flex;
+  gap: 10px;
+  padding: 2px 0;
+}
+.facts dt {
+  flex: 0 0 34px;
+  color: var(--dim);
+}
+.facts dd {
+  margin: 0;
+  color: #c3ced9;
+}
+
+.steps {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.steps li {
+  display: grid;
+  grid-template-columns: 20px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 6px;
+  border-radius: 7px;
+  font-size: 12px;
+  color: #b9c5d2;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition:
+    background 0.16s,
+    border-color 0.16s;
+}
+.steps li:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+.steps li.on {
+  background: rgba(212, 160, 23, 0.12);
+  border-left-color: var(--accent);
+  color: #f2e2bd;
+}
+.steps .no {
+  font-size: 10px;
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+}
+.steps .gen {
+  font-size: 10px;
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+}
+.caption {
+  margin: 10px 0 0;
+  padding-top: 9px;
+  border-top: 1px solid var(--line);
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: #93a1b1;
+  min-height: 40px;
+}
+
+/* ---------- 底部 ---------- */
+.controls {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 26px 14px;
+  border-top: 1px solid var(--line);
+  background: linear-gradient(0deg, rgba(16, 22, 31, 0.96), rgba(16, 22, 31, 0.55));
+}
+button {
+  font-family: inherit;
+  font-size: 12.5px;
+  color: #cfd9e4;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 8px;
+  padding: 7px 13px;
+  cursor: pointer;
+  transition:
+    background 0.16s,
+    border-color 0.16s,
+    color 0.16s,
+    transform 0.1s;
+  white-space: nowrap;
+}
+button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+button:active {
+  transform: translateY(1px);
+}
+button.primary {
+  background: linear-gradient(180deg, rgba(212, 160, 23, 0.26), rgba(212, 160, 23, 0.14));
+  border-color: rgba(212, 160, 23, 0.5);
+  color: #f2d891;
+  min-width: 88px;
+  font-weight: 600;
+}
+button.primary:hover {
+  background: linear-gradient(180deg, rgba(212, 160, 23, 0.38), rgba(212, 160, 23, 0.2));
+}
+.spacer {
+  flex: 1;
+}
+.hint {
+  font-size: 11px;
+  color: var(--dim);
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 900px) {
+  .stage {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+  aside {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    max-height: 42vh;
+  }
+}

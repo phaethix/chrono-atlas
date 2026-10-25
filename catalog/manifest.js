@@ -26,7 +26,7 @@ const VOLUMES = [
     id: 'zuxian',
     period: '史前',
     status: 'done',
-    views: ['zuxian'],
+    views: ['zuxian', 'shixi'],
     chapters: ['第一章 夏娃造反', '第二章 女娲登坛', '第三章 伏羲设局', '第四章 炎帝东征', '第五章 黄帝出场', '第六章 尧舜下课'],
   },
   {

@@ -9,6 +9,7 @@
 CORPUS.relate(
   // 婚姻
   { from: 'person-huangdi', to: 'person-leizu', kind: 'spouse', role: 'primary', src: 'legend', source: '《史记·五帝本纪》' },
+  { from: 'person-changyi', to: 'person-changpu', kind: 'spouse', role: 'primary', src: 'legend', source: '《史记·五帝本纪》' },
 
   // 黄帝一系
   { from: 'person-huangdi', to: 'person-xuanxiao', kind: 'parent', role: 'father', src: 'legend', source: '《史记·五帝本纪》' },
@@ -47,7 +48,10 @@ CORPUS.relate(
   { from: 'person-zhi', to: 'person-yao', kind: 'sibling', role: 'different-mother', src: 'legend', source: '《史记·五帝本纪》' },
   { from: 'person-qi', to: 'person-ji', kind: 'sibling', role: 'different-mother', src: 'legend', source: '《史记》殷周本纪' },
 
-  // 继位：兄终弟及与禅让都走同一条边
+  // 继位：孙继祖、族孙继位、父死子继、兄终弟及、禅让，都走同一条边
+  { from: 'person-huangdi', to: 'person-zhuanxu', kind: 'succession', role: 'throne', src: 'legend', source: '《史记·五帝本纪》', note: '孙继祖位。黄帝崩，昌意之子高阳立。' },
+  { from: 'person-zhuanxu', to: 'person-diku', kind: 'succession', role: 'throne', src: 'legend', source: '《史记·五帝本纪》', note: '族孙继位。颛顼崩，玄嚣之孙高辛立。' },
+  { from: 'person-diku', to: 'person-zhi', kind: 'succession', role: 'throne', src: 'legend', source: '《史记·五帝本纪》', note: '父死子继。' },
   { from: 'person-zhi', to: 'person-yao', kind: 'succession', role: 'throne', src: 'legend', source: '《史记·五帝本纪》', note: '兄终弟及。挚立而不善，尧代之。' },
   { from: 'person-yao', to: 'person-shun', kind: 'succession', role: 'throne', src: 'legend', source: '《史记·五帝本纪》', note: '禅让。' },
   { from: 'person-shun', to: 'person-yu', kind: 'succession', role: 'throne', src: 'legend', source: '《史记·五帝本纪》', note: '禅让。' },

@@ -40,6 +40,7 @@ Every territorial change therefore traces back to a year and a source, and can b
 | ----------------------------------------------------------- | --------------- | ---------------------------------------------------------- |
 | [Spring and Autumn, Warring States](demos/chunqiu-zhanguo/) | 770 – 221 BCE   | 38 historical regions, 29 polities, 68 events, 15 battles  |
 | [Ancestors](demos/zuxian/)                                  | 7000 – 1900 BCE | 39 regions, 17 archaeological cultures, 46 events, 9 sites |
+| [Five Emperors](demos/shixi/)                               | legendary       | 20 people, 35 kinship, succession and rivalry edges        |
 
 To add a new subject, see [docs/adding-a-demo.md](docs/adding-a-demo.md).
 

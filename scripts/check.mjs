@@ -28,6 +28,7 @@ const REQUIRED_DEMO_FILES = ['index.html', 'data.js', 'app.js', 'style.css', 'RE
 const EVENT_TYPES = ['normal', 'shift', 'merge', 'era'];
 const SOURCE_TYPES = ['arch', 'legend', 'text'];
 const SITE_KINDS = ['battle', 'site'];
+const VIEW_KINDS = ['map', 'kin'];
 
 const errors = [];
 const warnings = [];
@@ -47,7 +48,22 @@ const ok = () => {
  */
 function loadDemoData(dataFile) {
   const code = fs.readFileSync(dataFile, 'utf8');
-  const probe = '({ META, S, REGIONS, RIVERS, INIT, EVENTS, BATTLES, ERAS, NOTES })';
+  // 关系视图没有地图那套绑定，取值一律先判存在，否则整个 data.js 求值就失败了
+  const names = [
+    'META',
+    'S',
+    'REGIONS',
+    'RIVERS',
+    'INIT',
+    'EVENTS',
+    'BATTLES',
+    'ERAS',
+    'NOTES',
+    'STEPS',
+  ];
+  const probe = `({${names
+    .map((n) => `${n}: typeof ${n} === 'undefined' ? undefined : ${n}`)
+    .join(', ')}})`;
   const context = vm.createContext({});
   return vm.runInContext(`${code}\n;${probe}`, context, {
     filename: dataFile,
@@ -57,7 +73,7 @@ function loadDemoData(dataFile) {
 
 /* ---------- 2. 数据完整性 ---------- */
 
-function validateDemo(demoName, dir) {
+function validateDemo(demoName, dir, corpusIds) {
   const where = `demos/${demoName}`;
 
   for (const f of REQUIRED_DEMO_FILES) {
@@ -85,7 +101,37 @@ function validateDemo(demoName, dir) {
   if (META.id !== demoName) {
     fail(where, `META.id (${META.id}) 与目录名不一致`);
   }
-  for (const key of ['title', 'summary', 'from', 'to']) {
+
+  /* 视图类型：地图与关系两种。24 卷里不是每卷都有地图，校验必须分开 */
+  const view = META.view || 'map';
+  if (!VIEW_KINDS.includes(view)) {
+    fail(where, `META.view='${view}' 不在 ${VIEW_KINDS.join(' / ')} 之内`);
+  }
+
+  for (const key of ['title', 'summary']) {
+    if (META[key] === undefined || META[key] === '') fail(where, `META.${key} 缺失`);
+  }
+
+  if (view === 'kin') {
+    /* 关系视图：没有年份区间，data.js 给一条 STEPS 进程 */
+    const steps = data.STEPS;
+    if (!Array.isArray(steps) || !steps.length) {
+      fail(where, 'kin 视图的 data.js 需要非空 STEPS 数组');
+    } else {
+      for (const [i, s] of steps.entries()) {
+        if (!s.focus) {
+          fail(where, `STEPS[${i}] 缺少 focus`);
+        } else if (corpusIds && !corpusIds.has(s.focus)) {
+          fail(where, `STEPS[${i}] 指向不存在的实体：${s.focus}`);
+        }
+        if (!s.text) fail(where, `STEPS[${i}] 缺少旁白 text`);
+      }
+    }
+    ok();
+    return { view, steps: Array.isArray(steps) ? steps.length : 0 };
+  }
+
+  for (const key of ['from', 'to']) {
     if (META[key] === undefined || META[key] === '') fail(where, `META.${key} 缺失`);
   }
   if (typeof META.from !== 'number' || typeof META.to !== 'number') {
@@ -647,6 +693,7 @@ function checkCorpus() {
     people: Object.keys(corpus.people || {}).length,
     relations: relations.length,
     shards,
+    ids: new Set(kindOf.keys()),
   };
 }
 
@@ -732,22 +779,28 @@ function main() {
         .sort()
     : [];
 
+  // 语料先载入：关系视图的 STEPS 要对着实体表校验
+  const corpus = checkCorpus();
   for (const name of demoDirs) {
-    summaries.push({ name, ...validateDemo(name, path.join(DEMOS_DIR, name)) });
+    summaries.push({
+      name,
+      ...validateDemo(name, path.join(DEMOS_DIR, name), corpus.ids),
+    });
   }
 
   checkGallery(demoDirs);
   const catalog = checkCatalog(demoDirs);
-  const corpus = checkCorpus();
   const readmes = checkReadmes();
   const links = checkLinks();
 
   console.log('时空图集 · 仓库自检\n');
 
   for (const s of summaries) {
-    const detail = s.regionCount
-      ? `  区域 ${s.regionCount} · 势力 ${s.powerCount} · 事件 ${s.eventCount}`
-      : '  （数据未通过校验）';
+    let detail = '  （数据未通过校验）';
+    if (s.view === 'kin') detail = `  关系视图 · 进程 ${s.steps}`;
+    else if (s.regionCount) {
+      detail = `  区域 ${s.regionCount} · 势力 ${s.powerCount} · 事件 ${s.eventCount}`;
+    }
     console.log(`  演示 ${s.name}${detail}`);
   }
 

@@ -663,7 +663,7 @@ function reopenDossier(){
     return true;
   }
   // 否则向前回溯，找最近一次造成灭国的兼并
-  const merges = EVENTS.filter(e => e.t === 'merge' && e.ch && e.y <= curYear).sort((a, b) => b.y - a.y);
+  const merges = EVENTS.filter(e => (e.t === 'merge' || e.t === 'shift') && e.ch && e.y <= curYear).sort((a, b) => b.y - a.y);
   for (const ev of merges){
     const before = ownerAt(ev.y - 1);
     const after = ownerAt(ev.y);
@@ -815,7 +815,7 @@ function updatePanel(year, own){
   const justNow = EVENTS.filter(e=>e.y===year);
   $('eventList').innerHTML = recent.length ? recent.map(e=>{
     const cls = ['ev'];
-    if (e.t === 'merge') cls.push('tag-merge');
+    if (e.t === 'merge' || e.t === 'shift') cls.push('tag-merge');
     if (e.t === 'era') cls.push('tag-era');
     if (e.y === year) cls.push('new');
     return `<div class="${cls.join(' ')}"><time>前${-e.y}</time><p>${e.s}</p></div>`;
@@ -892,7 +892,7 @@ function tick(ts){
   // 跨过一个兼并事件时停一下
   if (shown !== lastRendered){
     lastRendered = shown;
-    const hit = EVENTS.some(e => e.y === shown && e.t === 'merge' && e.ch);
+    const hit = EVENTS.some(e => e.y === shown && (e.t === 'merge' || e.t === 'shift') && e.ch);
     if (hit) holdUntil = ts + HOLD_MS;
     $('slider').value = shown;
     render(shown, { silent:true });
@@ -1006,7 +1006,7 @@ const evtMarkEls = [];
 (function buildEventMarks(){
   const box = $('evtmarks');
   const span = MAX_Y - MIN_Y;
-  const merges = EVENTS.filter(e => e.t === 'merge' && e.ch);
+  const merges = EVENTS.filter(e => (e.t === 'merge' || e.t === 'shift') && e.ch);
   box.innerHTML = merges.map(e => {
     const p = (e.y - MIN_Y) / span * 100;
     return `<i data-y="${e.y}" style="left:${p.toFixed(2)}%" title="前${-e.y}年 领土变更"></i>`;
@@ -1065,5 +1065,9 @@ gRegions.addEventListener('mouseleave', ()=>tip.classList.remove('on'));
 
 /* ---------- 初始化 ---------- */
 (function init(){
+  // 起止年份由 META 决定：滑块范围在这里设，不在 index.html 里写死
+  const slider = $('slider');
+  slider.min = MIN_Y;
+  slider.max = MAX_Y;
   setYear(MIN_Y);
 })();

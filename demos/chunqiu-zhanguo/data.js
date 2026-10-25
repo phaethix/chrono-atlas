@@ -167,7 +167,7 @@ const EVENTS = [
   { y:-296, t:'merge', s:'赵灭中山，迁其王于肤施，赵北境连成一片。', ch:{ zhongshan:'zhao' } },
   { y:-293, t:'normal', s:'伊阙之战，白起斩首二十四万，韩魏精锐尽失。' },
   { y:-286, t:'merge', s:'齐湣王灭宋，宋王偃走死；宋尝灭滕、伐薛，滕地亦入于齐。', ch:{ song:'qi', cao:'qi', xuzhou:'qi', teng:'qi' } },
-  { y:-284, t:'normal', s:'五国合纵伐齐，乐毅下齐七十余城，齐仅存莒、即墨，宋地遂为魏、楚所分。', ch:{ song:'wei', cao:'wei', xuzhou:'chu', teng:'chu' } },
+  { y:-284, t:'shift', s:'五国合纵伐齐，乐毅下齐七十余城，齐仅存莒、即墨，宋地遂为魏、楚所分。', ch:{ song:'wei', cao:'wei', xuzhou:'chu', teng:'chu' } },
   { y:-278, t:'merge', s:'白起拔郢，楚顷襄王东徙于陈，江汉尽归于秦。', ch:{ chujiang:'qin' } },
   { y:-277, t:'merge', s:'秦取楚黔中郡，楚西南屏障尽失。', ch:{ xiang:'qin' } },
   { y:-272, t:'merge', s:'秦置南阳郡，楚宛、穰之地尽入于秦。', ch:{ nanyang:'qin' } },

@@ -88,9 +88,9 @@ aside::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:4p
   font-size:12px;line-height:1.62;
   padding:7px 8px;border-radius:8px;
   border-left:2px solid rgba(255,255,255,.09);
-  animation:evin .38s ease both;
 }
-.ev.new{border-left-color:var(--accent);background:rgba(212,160,23,.09)}
+/* 入场动画只给「就是这一年」的那条：整列都放的话，播放时列表重建会让每行重新淡入 */
+.ev.new{border-left-color:var(--accent);background:rgba(212,160,23,.09);animation:evin .38s ease both}
 .ev time{color:var(--accent2);font-size:11px;font-variant-numeric:tabular-nums;white-space:nowrap;padding-top:1px}
 .ev p{margin:0;color:#c3ced9}
 .ev.tag-merge{border-left-color:#c0392b}
@@ -325,7 +325,9 @@ input[type=range]::-webkit-slider-thumb{
 }
 .slabel.small{font-size:10px;stroke-width:1.8px;opacity:.9}
 
-  /* 窄屏：卡片改为视口浮层，避免被地图容器高度限制而截断展开内容 */
+/* 窄屏：卡片改为视口浮层，避免被地图容器高度限制而截断展开内容。
+   这一段原先缺了 @media 头，规则会落到桌面端，把史实说明一并隐藏。 */
+@media (max-width: 900px){
   .dossier{
     position:fixed;right:10px;bottom:64px;width:min(252px,calc(100vw - 20px));
     max-height:min(58vh,420px);padding:9px 11px;font-size:11px;

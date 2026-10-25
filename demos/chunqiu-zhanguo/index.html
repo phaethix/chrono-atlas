@@ -1,98 +1,109 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>春秋战国 · 疆域与兼并（前 770 — 前 221）| 时空图集</title>
-<meta name="description" content="春秋战国五百五十年的疆域变迁动画：逐年归属、百余国的消亡、关键战役与兼并档案。">
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-
-<div class="stage">
-  <div class="mapwrap" id="mapwrap">
-    <svg id="map" viewBox="0 0 1000 720" preserveAspectRatio="xMidYMid meet" aria-label="春秋战国疆域图">
-      <defs id="defs">
-        <radialGradient id="landGrad" cx="42%" cy="38%" r="72%">
-          <stop offset="0%" stop-color="#1a2431"/>
-          <stop offset="100%" stop-color="#0e1520"/>
-        </radialGradient>
-        <pattern id="gridPat" width="50" height="50" patternUnits="userSpaceOnUse">
-          <path d="M50 0 L0 0 0 50" fill="none" stroke="rgba(255,255,255,.028)" stroke-width="1"/>
-        </pattern>
-        <filter id="landGrow" x="-18%" y="-18%" width="136%" height="136%">
-          <feMorphology operator="dilate" radius="9" in="SourceGraphic"/>
-        </filter>
-      </defs>
-      <rect x="0" y="0" width="1000" height="720" fill="url(#landGrad)"/>
-      <rect x="0" y="0" width="1000" height="720" fill="url(#gridPat)"/>
-      <g id="landmass"></g>
-      <g id="regions"></g>
-      <g id="rivers"></g>
-      <g id="conquest"></g>
-      <g id="battles"></g>
-      <g id="ripples"></g>
-      <g id="labels"></g>
-    </svg>
-    <div class="mapmeta">
-      <strong id="metaTitle">天下形势</strong>
-      <span id="metaSub">姬姓诸侯 · 百有余国</span>
-    </div>
-    <div class="legend" id="legend"></div>
-    <div class="annex" id="annex"></div>
-    <div class="dossier" id="dossier"></div>
-    <div class="tip" id="tip"></div>
-  </div>
-
-  <aside>
-    <div class="panel">
-      <div class="yearpanel">
-        <div class="yearbig" id="yearBig">前 770 年</div>
-        <div class="era" id="eraTag">春秋</div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>春秋战国 · 疆域与兼并（前 770 — 前 221）| 时空图集</title>
+    <meta
+      name="description"
+      content="春秋战国五百五十年的疆域变迁动画：逐年归属、百余国的消亡、关键战役与兼并档案。"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="stage">
+      <div class="mapwrap" id="mapwrap">
+        <svg
+          id="map"
+          viewBox="0 0 1000 720"
+          preserveAspectRatio="xMidYMid meet"
+          aria-label="春秋战国疆域图"
+        >
+          <defs id="defs">
+            <radialGradient id="landGrad" cx="42%" cy="38%" r="72%">
+              <stop offset="0%" stop-color="#1a2431" />
+              <stop offset="100%" stop-color="#0e1520" />
+            </radialGradient>
+            <pattern id="gridPat" width="50" height="50" patternUnits="userSpaceOnUse">
+              <path
+                d="M50 0 L0 0 0 50"
+                fill="none"
+                stroke="rgba(255,255,255,.028)"
+                stroke-width="1"
+              />
+            </pattern>
+            <filter id="landGrow" x="-18%" y="-18%" width="136%" height="136%">
+              <feMorphology operator="dilate" radius="9" in="SourceGraphic" />
+            </filter>
+          </defs>
+          <rect x="0" y="0" width="1000" height="720" fill="url(#landGrad)" />
+          <rect x="0" y="0" width="1000" height="720" fill="url(#gridPat)" />
+          <g id="landmass"></g>
+          <g id="regions"></g>
+          <g id="rivers"></g>
+          <g id="conquest"></g>
+          <g id="battles"></g>
+          <g id="ripples"></g>
+          <g id="labels"></g>
+        </svg>
+        <div class="mapmeta">
+          <strong id="metaTitle">天下形势</strong>
+          <span id="metaSub">姬姓诸侯 · 百有余国</span>
+        </div>
+        <div class="legend" id="legend"></div>
+        <div class="annex" id="annex"></div>
+        <div class="dossier" id="dossier"></div>
+        <div class="tip" id="tip"></div>
       </div>
-      <div class="yearnote" id="yearNote">周平王东迁洛邑，王纲解纽，诸侯并起。</div>
+
+      <aside>
+        <div class="panel">
+          <div class="yearpanel">
+            <div class="yearbig" id="yearBig">前 770 年</div>
+            <div class="era" id="eraTag">春秋</div>
+          </div>
+          <div class="yearnote" id="yearNote">周平王东迁洛邑，王纲解纽，诸侯并起。</div>
+        </div>
+
+        <div class="panel">
+          <h3>势力版图</h3>
+          <div class="power" id="powerList"></div>
+        </div>
+
+        <div class="panel">
+          <h3>大事记</h3>
+          <div class="events" id="eventList">
+            <div class="empty">尚未发生任何大事。</div>
+          </div>
+        </div>
+      </aside>
     </div>
 
-    <div class="panel">
-      <h3>势力版图</h3>
-      <div class="power" id="powerList"></div>
-    </div>
-
-    <div class="panel">
-      <h3>大事记</h3>
-      <div class="events" id="eventList">
-        <div class="empty">尚未发生任何大事。</div>
+    <div class="controls">
+      <div class="crow">
+        <button class="primary" id="btnPlay">播放</button>
+        <button id="btnPrevEvt">上一事件</button>
+        <button id="btnNextEvt">下一事件</button>
+        <button id="btnReset">回到前 770 年</button>
+        <div class="spacer"></div>
+        <span style="font-size: 11px; color: var(--dim); letter-spacing: 0.1em">速度</span>
+        <div class="speed" id="speedBox">
+          <button data-speed="0.5">0.5×</button>
+          <button data-speed="1" class="on">1×</button>
+          <button data-speed="2">2×</button>
+          <button data-speed="4">4×</button>
+        </div>
+      </div>
+      <div class="crow">
+        <div class="trackwrap">
+          <div class="evtmarks" id="evtmarks"></div>
+          <input type="range" id="slider" step="1" />
+          <div class="ticks" id="ticks"></div>
+        </div>
       </div>
     </div>
-  </aside>
-</div>
 
-<div class="controls">
-  <div class="crow">
-    <button class="primary" id="btnPlay">播放</button>
-    <button id="btnPrevEvt">上一事件</button>
-    <button id="btnNextEvt">下一事件</button>
-    <button id="btnReset">回到前 770 年</button>
-    <div class="spacer"></div>
-    <span style="font-size:11px;color:var(--dim);letter-spacing:.1em">速度</span>
-    <div class="speed" id="speedBox">
-      <button data-speed="0.5">0.5×</button>
-      <button data-speed="1" class="on">1×</button>
-      <button data-speed="2">2×</button>
-      <button data-speed="4">4×</button>
-    </div>
-  </div>
-  <div class="crow">
-    <div class="trackwrap">
-      <div class="evtmarks" id="evtmarks"></div>
-      <input type="range" id="slider" min="-770" max="-221" step="1" value="-770">
-      <div class="ticks" id="ticks"></div>
-    </div>
-  </div>
-</div>
-
-<script src="data.js"></script>
-<script src="app.js"></script>
-</body>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
 </html>

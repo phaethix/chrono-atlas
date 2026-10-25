@@ -813,7 +813,7 @@ function main() {
 
   if (catalog.total) {
     console.log(
-      `  卷目 ${catalog.total} · 已成视图 ${catalog.done} · 部分录入 ${catalog.partial} · 章目 ${catalog.chapters}`,
+      `  卷目 ${catalog.total} · 标为完成 ${catalog.done} · 部分录入 ${catalog.partial} · 章目 ${catalog.chapters}`,
     );
   }
   if (corpus.people !== undefined) {

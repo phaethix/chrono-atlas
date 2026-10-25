@@ -1,351 +1,265 @@
 /*!
- * 时空图集 Chrono Atlas · 站点级共享样式
+ * 时空图集 · 站点级共享样式
  *
- * 只放画廊首页与通用文档页面用的样式。每个演示自带 style.css，
- * 可以自由设计自己的视觉，不必与这里保持一致。
+ * 只服务画廊首页。演示自带 style.css，与本文件无关。
+ * 取向：一块底色、一层边线、一处强调色。不加渐变、不加阴影、不做悬停位移。
  */
 :root {
   --bg: #0b0f16;
-  --panel: rgba(20, 28, 40, 0.78);
-  --panel-solid: #141c28;
-  --line: rgba(255, 255, 255, 0.075);
-  --text: #e6edf3;
+  --panel: #0f1620;
+  --line: #1c2532;
+  --text: #e6ecf3;
   --muted: #8b98a8;
-  --dim: #5d6b7d;
-  --accent: #d4a017;
-  --accent2: #e8c25a;
-  --radius: 10px;
-  --maxw: 1080px;
+  --dim: #5b6879;
+  --faint: #3d4a5c;
+  --done: #d4a017;
 }
-
 * {
   box-sizing: border-box;
 }
-
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(1200px 700px at 18% -12%, #1c2939 0%, transparent 58%),
-    radial-gradient(900px 620px at 92% 112%, #19232f 0%, transparent 55%), var(--bg);
-  background-attachment: fixed;
+  background: var(--bg);
   color: var(--text);
   font-family:
     -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
     sans-serif;
-  font-size: 15px;
-  line-height: 1.72;
+  font-size: 14px;
+  line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }
-
 .wrap {
-  max-width: var(--maxw);
+  max-width: 920px;
   margin: 0 auto;
-  padding: 0 24px 72px;
+  padding: 0 24px 64px;
 }
 
 /* ---------- 页头 ---------- */
-.site-head {
-  padding: 64px 0 40px;
+header {
+  padding: 72px 0 40px;
   border-bottom: 1px solid var(--line);
-  margin-bottom: 40px;
 }
-
-.site-head .eyebrow {
-  font-size: 12px;
-  letter-spacing: 0.22em;
+.eyebrow {
+  font-size: 10.5px;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 14px;
+  color: var(--faint);
 }
-
-.site-head h1 {
-  margin: 0;
-  font-size: 40px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  font-family: 'Songti SC', 'STSong', 'SimSun', serif;
-  line-height: 1.25;
-}
-
-.site-head h1 span {
-  color: var(--accent2);
-}
-
-.site-head .lede {
+h1 {
   margin: 16px 0 0;
-  max-width: 640px;
-  color: var(--muted);
-  font-size: 15px;
+  font-size: 34px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  font-family: 'Songti SC', 'STSong', 'SimSun', serif;
+  line-height: 1.2;
 }
-
-.site-head .links {
+.lede {
+  margin: 14px 0 0;
+  max-width: 620px;
+  font-size: 14px;
+  line-height: 1.85;
+  color: var(--muted);
+}
+.links {
   margin-top: 22px;
   display: flex;
-  gap: 10px;
+  gap: 20px;
   flex-wrap: wrap;
+  font-size: 12.5px;
 }
-
-.site-head .links a {
-  display: inline-block;
-  padding: 7px 14px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  color: var(--muted);
+.links a {
+  color: var(--dim);
   text-decoration: none;
-  font-size: 13px;
+  border-bottom: 1px solid transparent;
   transition:
-    border-color 0.18s,
-    color 0.18s;
+    color 0.16s,
+    border-color 0.16s;
+}
+.links a:hover {
+  color: var(--text);
+  border-bottom-color: var(--line);
 }
 
-.site-head .links a:hover {
-  border-color: var(--accent);
-  color: var(--accent2);
+/* ---------- 区块 ---------- */
+section {
+  margin-top: 52px;
 }
-
-/* ---------- 分区标题 ---------- */
-.section-title {
+section h2 {
   display: flex;
   align-items: baseline;
-  gap: 12px;
-  margin: 0 0 20px;
-  font-size: 13px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--dim);
+  gap: 10px;
+  margin: 0 0 18px;
+  font-size: 11px;
   font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--dim);
+  text-transform: uppercase;
 }
-
-.section-title::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--line);
+section h2 span {
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--faint);
+  text-transform: none;
 }
 
 /* ---------- 演示卡片 ---------- */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 18px;
-  margin-bottom: 56px;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
 }
-
 .card {
-  display: block;
-  position: relative;
-  padding: 22px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: linear-gradient(160deg, rgba(28, 38, 52, 0.55), rgba(18, 25, 35, 0.55));
-  text-decoration: none;
-  color: inherit;
-  overflow: hidden;
-  transition:
-    border-color 0.2s,
-    transform 0.2s;
-}
-
-.card:hover {
-  border-color: rgba(212, 160, 23, 0.5);
-  transform: translateY(-2px);
-}
-
-.card h3 {
-  margin: 0;
-  font-size: 21px;
-  font-weight: 600;
-  font-family: 'Songti SC', 'STSong', 'SimSun', serif;
-  letter-spacing: 0.04em;
-}
-
-.card h3 span {
-  color: var(--accent2);
-  font-size: 15px;
-  margin-left: 8px;
-  font-weight: 400;
-}
-
-.card .meta {
-  margin-top: 8px;
-  font-size: 12px;
-  color: var(--dim);
-  letter-spacing: 0.08em;
-}
-
-.card p {
-  margin: 12px 0 0;
-  font-size: 13.5px;
-  color: var(--muted);
-  line-height: 1.65;
-}
-
-.card .tags {
-  margin-top: 16px;
+  min-width: 0;
   display: flex;
-  gap: 7px;
-  flex-wrap: wrap;
-}
-
-.card .tags b {
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--dim);
+  flex-direction: column;
+  padding: 20px 22px 18px;
   border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 2px 9px;
+  border-radius: 10px;
+  background: var(--panel);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.18s;
 }
-
-.card .go {
-  margin-top: 18px;
-  font-size: 12.5px;
-  color: var(--accent);
+.card:hover {
+  border-color: #2c3a4b;
+}
+.card .top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 10.5px;
   letter-spacing: 0.1em;
+  color: var(--faint);
 }
-
-/* 占位卡片：征集中的题材 */
-.card.placeholder {
-  border-style: dashed;
-  background: none;
-  opacity: 0.62;
-  cursor: default;
-}
-
-.card.placeholder:hover {
-  transform: none;
-  border-color: var(--line);
-}
-
-/* ---------- 文档页正文 ---------- */
-.doc h2 {
-  margin: 44px 0 14px;
+.card h3 {
+  margin: 14px 0 0;
   font-size: 20px;
   font-weight: 600;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
+  font-family: 'Songti SC', 'STSong', 'SimSun', serif;
 }
-
-.doc h3 {
-  margin: 28px 0 10px;
-  font-size: 15.5px;
-  font-weight: 600;
-  color: var(--accent2);
-}
-
-.doc p,
-.doc li {
+.card h3 em {
+  margin-left: 9px;
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
   color: var(--muted);
-  font-size: 14.5px;
+  font-family: inherit;
 }
-
-.doc a {
-  color: var(--accent2);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(232, 194, 90, 0.3);
-}
-.doc a:hover {
-  border-bottom-color: var(--accent2);
-}
-
-.doc code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+.card p {
+  margin: 10px 0 0;
   font-size: 12.5px;
-  background: rgba(255, 255, 255, 0.055);
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  padding: 1px 5px;
-  color: var(--text);
-}
-
-.doc pre {
-  background: rgba(0, 0, 0, 0.32);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 15px 17px;
-  overflow-x: auto;
-  font-size: 12.8px;
-  line-height: 1.62;
-}
-
-.doc pre code {
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: inherit;
-}
-
-.doc ul,
-.doc ol {
-  padding-left: 22px;
-}
-.doc li {
-  margin: 5px 0;
-}
-
-.doc table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 16px 0;
-  font-size: 13.5px;
-}
-
-.doc th,
-.doc td {
-  border: 1px solid var(--line);
-  padding: 8px 11px;
-  text-align: left;
+  line-height: 1.75;
   color: var(--muted);
 }
-
-.doc th {
-  color: var(--text);
-  font-weight: 600;
-  background: rgba(255, 255, 255, 0.03);
+.card .meta {
+  margin-top: auto;
+  padding-top: 16px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--faint);
 }
 
-.doc blockquote {
-  margin: 18px 0;
-  padding: 2px 0 2px 16px;
-  border-left: 2px solid rgba(212, 160, 23, 0.5);
+/* ---------- 卷目 ---------- */
+.vols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.vgroup h3 {
+  margin: 0 0 10px;
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  color: var(--faint);
+}
+.vgroup ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.vgroup {
+  min-width: 0;
+}
+.vgroup {
+  min-width: 0;
+}
+.vgroup li {
+  display: flex;
+  gap: 9px;
+  font-size: 12.5px;
+  line-height: 2.05;
   color: var(--dim);
-  font-size: 14px;
+}
+.vgroup li a,
+.vgroup li span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.vgroup li a,
+.vgroup li span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.vgroup li b {
+  flex: 0 0 2.9em;
+  white-space: nowrap;
+  font-weight: 400;
+  color: var(--faint);
+  font-variant-numeric: tabular-nums;
+}
+.vgroup li.on b {
+  color: var(--done);
+}
+.vgroup li.on a {
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.vgroup li.on a:hover {
+  border-bottom-color: #2c3a4b;
 }
 
 /* ---------- 页脚 ---------- */
-.site-foot {
-  margin-top: 64px;
-  padding-top: 22px;
-  border-top: 1px solid var(--line);
+footer {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
   align-items: baseline;
-  font-size: 12.5px;
-  color: var(--dim);
+  margin-top: 64px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  font-size: 11.5px;
+  color: var(--faint);
 }
-
-.site-foot .spacer {
+footer .spacer {
   flex: 1;
 }
-.site-foot a {
-  color: var(--muted);
+footer a {
+  color: var(--dim);
   text-decoration: none;
 }
-.site-foot a:hover {
-  color: var(--accent2);
+footer a:hover {
+  color: var(--text);
 }
 
-@media (max-width: 620px) {
+@media (max-width: 720px) {
   .wrap {
-    padding: 0 16px 48px;
+    padding: 0 18px 48px;
   }
-  .site-head {
-    padding: 40px 0 28px;
+  header {
+    padding: 48px 0 32px;
   }
-  .site-head h1 {
-    font-size: 29px;
+  h1 {
+    font-size: 28px;
   }
   .cards {
     grid-template-columns: 1fr;
+  }
+  .vols {
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
   }
 }

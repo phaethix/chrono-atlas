@@ -3,94 +3,141 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>时空图集 · 用动画读历史</title>
+    <title>时空图集 · 二十四卷中国史</title>
     <meta
       name="description"
-      content="把历史的疆域、人口与事件做成可交互的时间轴动画。每个演示都是一份可读、可校验、可贡献的数据。"
+      content="把中国史做成可读、可校验的数据：地图看空间，人物图看关系。每个演示都由一份带出处的数据生成。"
     />
     <meta property="og:title" content="时空图集 Chrono Atlas" />
-    <meta property="og:description" content="把历史的疆域、人口与事件做成可交互的时间轴动画。" />
+    <meta property="og:description" content="把中国史做成可读、可校验的数据。" />
     <meta property="og:type" content="website" />
     <link rel="stylesheet" href="assets/site.css" />
   </head>
   <body>
     <div class="wrap">
-      <header class="site-head">
+      <header>
         <div class="eyebrow">Chrono Atlas</div>
-        <h1>时空图集 <span>用动画读历史</span></h1>
+        <h1>时空图集</h1>
         <p class="lede">
-          把历史的疆域、人物与事件做成可交互的图：地图看空间，谱系看血缘，年表看先后。
-          每个演示都附一份可读、可校验的数据，改动一行就能看到结果。
+          二十四卷中国史，做成可交互的图。地图看空间，人物图看关系，每一条都能回到所据之书。
         </p>
-        <div class="links">
+        <nav class="links">
           <a href="https://github.com/phaethix/chrono-atlas">GitHub</a>
-          <a href="docs/adding-a-demo.md">新增一个演示</a>
+          <a href="docs/README.zh-CN.md">说明</a>
           <a href="docs/data-format.md">数据格式</a>
-          <a href="docs/README.zh-CN.md">中文说明</a>
-          <a href="https://github.com/phaethix/chrono-atlas/blob/main/CONTRIBUTING.md">参与贡献</a>
-        </div>
+          <a href="docs/adding-a-demo.md">新增演示</a>
+        </nav>
       </header>
 
-      <div class="section-title">演示</div>
-      <div class="cards">
-        <a class="card" href="demos/chunqiu-zhanguo/index.html">
-          <h3>春秋战国<span>疆域与兼并</span></h3>
-          <div class="meta">前 770 — 前 221 · 中国</div>
-          <p>五百五十年间，百余诸侯并吞为七雄，终归于一。逐年的疆域归属、灭国事件与关键战役。</p>
-          <div class="tags"><b>中国</b><b>先秦</b><b>疆域</b><b>兼并</b></div>
-          <div class="go">进入演示 →</div>
-        </a>
+      <section>
+        <h2>已成视图 <span id="doneCount">2</span></h2>
+        <div class="cards">
+          <a class="card" href="demos/renwu/index.html">
+            <div class="top"><span>第一卷 · 祖先</span><span>人物</span></div>
+            <h3>人物与阶段<em>从蛙到龙</em></h3>
+            <p>十五个人，六个阶段。一条继位的链，没有族谱——本书说五帝之间没有血缘。</p>
+            <div class="meta">上古 · 15 人 · 19 条关系</div>
+          </a>
 
-        <a class="card" href="demos/renwu/index.html">
-          <h3>人物与阶段<span>从蛙到龙</span></h3>
-          <div class="meta">上古 · 中国</div>
-          <p>
-            十五个人，六个阶段。一条继位的链，没有族谱——本书说五帝之间没有血缘。被否定的旧说留了叉。
-          </p>
-          <div class="tags"><b>中国</b><b>上古</b><b>人物</b><b>传说</b></div>
-          <div class="go">进入演示 →</div>
-        </a>
-
-        <div class="card placeholder">
-          <h3>下一个题材</h3>
-          <div class="meta">征集中</div>
-          <p>
-            罗马行省的扩张、日本战国的势力消长、大航海时代的航线与殖民点，都适合用同一套形式表达。
-          </p>
-          <div class="tags"><b>欢迎提 Issue</b><b>或直接提 PR</b></div>
+          <a class="card" href="demos/chunqiu-zhanguo/index.html">
+            <div class="top"><span>第五卷 · 从春秋到战国</span><span>地图</span></div>
+            <h3>春秋战国<em>疆域与兼并</em></h3>
+            <p>五百五十年间，百余诸侯并吞为七雄，终归于一。逐年归属、灭国与关键战役。</p>
+            <div class="meta">前 770 — 前 221 · 38 区域 · 69 条事件</div>
+          </a>
         </div>
-      </div>
+      </section>
 
-      <div class="section-title">关于</div>
-      <div class="doc">
-        <h3>为什么另做一个</h3>
-        <p>
-          历史地图不缺，缺的是能读到底层数据的那种。这里每个演示的疆域都是一组经纬度多边形加一条归属变更年表，而不是一张画好的图片：想改边界就改坐标，想改结论就改年份，改完刷新即可。
-        </p>
-        <p>
-          因此演示里的每一处版图变化都能追溯到具体年份与史料，也能被脚本校验。数据有错时，交互做得再精致也只是把错误放大，所以每个演示都配了完整性检查。
-        </p>
-        <p>
-          人和人之间的关系也一样：血缘、继位、师承、敌对，都在一份全库共用的语料里，哪一卷提到都指向同一条记录。关系上的证据标得比地图更严——传说与考古必须能分开读。
-        </p>
+      <section>
+        <h2>全书卷目 <span id="volCount">24</span></h2>
+        <div class="vols" id="vols"></div>
+      </section>
 
-        <h3>技术取向</h3>
-        <p>
-          纯静态、零构建、零运行时依赖。双击 <code>index.html</code> 就能打开，不需要
-          Node、不需要打包，也不需要联网。这样做不是排斥工具链，而是希望十年后这些页面仍然能打开。
-        </p>
-        <p>
-          第二个演示把代价摆到了明处：画法几乎逐行重复，这份重复被接受了。没能通用的是用词——文化取代文化，不是国家灭了国家。这些差异放进数据，而不是抽一层引擎。
-        </p>
-      </div>
-
-      <footer class="site-foot">
+      <footer>
         <span>MIT License</span>
-        <span>数据与代码同协议</span>
+        <span>静态 · 零依赖</span>
         <div class="spacer"></div>
         <a href="https://github.com/phaethix/chrono-atlas">源码</a>
         <a href="https://github.com/phaethix/chrono-atlas/issues">反馈</a>
       </footer>
     </div>
+
+    <script src="catalog/manifest.js"></script>
+    <script>
+      (function () {
+        const groups = [
+          { name: '上古 · 先秦', from: 1, to: 6 },
+          { name: '秦汉 · 魏晋 · 隋唐', from: 7, to: 16 },
+          { name: '宋 · 元 · 明 · 清', from: 17, to: 24 },
+        ];
+        const nums = [
+          '一',
+          '二',
+          '三',
+          '四',
+          '五',
+          '六',
+          '七',
+          '八',
+          '九',
+          '十',
+          '十一',
+          '十二',
+          '十三',
+          '十四',
+          '十五',
+          '十六',
+          '十七',
+          '十八',
+          '十九',
+          '二十',
+          '二十一',
+          '二十二',
+          '二十三',
+          '二十四',
+        ];
+        const box = document.getElementById('vols');
+        if (!box || typeof VOLUMES === 'undefined') return;
+
+        // 用 DOM 拼而不是 innerHTML：href 由脚本赋值，链接检查就不会把它当成静态断链
+        for (const g of groups) {
+          const group = document.createElement('div');
+          group.className = 'vgroup';
+          const head = document.createElement('h3');
+          head.textContent = g.name;
+          group.appendChild(head);
+
+          const list = document.createElement('ol');
+          for (const v of VOLUMES.filter((x) => x.no >= g.from && x.no <= g.to)) {
+            const li = document.createElement('li');
+            const num = document.createElement('b');
+            num.textContent = nums[v.no - 1];
+            li.appendChild(num);
+
+            const view = (v.views || [])[0];
+            if (view) {
+              li.className = 'on';
+              const a = document.createElement('a');
+              a.href = 'demos/' + view + '/index.html';
+              a.textContent = v.title;
+              li.appendChild(a);
+            } else {
+              const span = document.createElement('span');
+              span.textContent = v.title;
+              li.appendChild(span);
+            }
+            list.appendChild(li);
+          }
+          group.appendChild(list);
+          box.appendChild(group);
+        }
+
+        const done = VOLUMES.filter((v) => (v.views || []).length).length;
+        const doneEl = document.getElementById('doneCount');
+        if (doneEl) doneEl.textContent = `${done} / ${VOLUMES.length}`;
+        const volEl = document.getElementById('volCount');
+        if (volEl) volEl.textContent = `${VOLUMES.length} 卷 · 已录 ${done}`;
+      })();
+    </script>
   </body>
 </html>

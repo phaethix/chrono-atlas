@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>《蛙》人物关系图与故事主线（版本B）</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --ink: #111827;
+        --muted: #6b7280;
+        --line: #9aa0a6;
+        --node: #ffffff;
+        --nodebd: #5b8ff9;
+        --center: #fff7e6;
+        --centerbd: #f59e0b;
+        --side: #faf5ff;
+        --sidebd: #8b5cf6;
+        --bad: #dc2626;
+        --badbg: #fef2f2;
+        --era: #eef2ff;
+        --erabd: #6366f1;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 28px 24px 40px;
+        background: var(--bg);
+        color: var(--ink);
+        font-family:
+          system-ui,
+          -apple-system,
+          'PingFang SC',
+          'Microsoft YaHei',
+          sans-serif;
+        line-height: 1.6;
+      }
+      .wrap {
+        max-width: 1240px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 23px;
+        margin: 0 0 4px;
+      }
+      .sub {
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 22px;
+      }
+      h2 {
+        font-size: 17px;
+        margin: 30px 0 12px;
+        padding-left: 9px;
+        border-left: 4px solid var(--nodebd);
+      }
+      .hint {
+        font-size: 12px;
+        color: var(--muted);
+        margin: -4px 0 10px;
+      }
+      .svgbox {
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 8px 10px;
+        background: #fff;
+        overflow-x: auto;
+      }
+      svg {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        height: auto;
+      }
+
+      .node rect {
+        fill: var(--node);
+        stroke: var(--nodebd);
+        stroke-width: 1.4;
+      }
+      .node .name {
+        font-size: 13px;
+        font-weight: 700;
+        fill: var(--ink);
+        text-anchor: middle;
+      }
+      .node .sub {
+        font-size: 10.5px;
+        fill: var(--muted);
+        text-anchor: middle;
+      }
+
+      .side rect {
+        fill: var(--side);
+        stroke: var(--sidebd);
+        stroke-width: 1.4;
+      }
+      .side .name {
+        font-size: 13px;
+        font-weight: 700;
+        fill: #5b21b6;
+        text-anchor: middle;
+      }
+      .side .sub {
+        font-size: 10.5px;
+        fill: var(--muted);
+        text-anchor: middle;
+      }
+
+      .bad rect {
+        fill: var(--badbg);
+        stroke: var(--bad);
+        stroke-width: 1.5;
+      }
+      .bad .name {
+        font-size: 13px;
+        font-weight: 700;
+        fill: var(--bad);
+        text-anchor: middle;
+      }
+      .bad .sub {
+        font-size: 10.5px;
+        fill: #b91c1c;
+        text-anchor: middle;
+      }
+
+      .center rect {
+        fill: var(--center);
+        stroke: var(--centerbd);
+        stroke-width: 2;
+      }
+      .center .name {
+        font-size: 15px;
+        font-weight: 800;
+        fill: #92400e;
+        text-anchor: middle;
+      }
+      .center .sub {
+        font-size: 10.8px;
+        fill: #b45309;
+        text-anchor: middle;
+      }
+
+      .era rect {
+        fill: var(--era);
+        stroke: var(--erabd);
+        stroke-width: 1.2;
+      }
+      .era text {
+        font-size: 12px;
+        fill: #3730a3;
+        text-anchor: middle;
+        font-weight: 600;
+      }
+
+      .edge {
+        stroke: var(--line);
+        stroke-width: 1.2;
+        fill: none;
+      }
+      .edge.bad {
+        stroke: var(--bad);
+        stroke-width: 1.6;
+        stroke-dasharray: 6 4;
+        fill: none;
+      }
+      .edge.far {
+        stroke: var(--sidebd);
+        stroke-width: 1.2;
+        fill: none;
+      }
+      .elabel {
+        font-size: 10px;
+        fill: var(--muted);
+        text-anchor: middle;
+        paint-order: stroke;
+        stroke: #fff;
+        stroke-width: 3.5px;
+        stroke-linejoin: round;
+      }
+      .elabel.bad {
+        fill: var(--bad);
+      }
+      .elabel.far {
+        fill: #7c3aed;
+      }
+      .elabel.l {
+        text-anchor: start;
+      }
+      .edge.secret {
+        stroke: #9aa0a6;
+        stroke-width: 1.2;
+        stroke-dasharray: 3 3;
+        fill: none;
+      }
+      .elabel.secret {
+        fill: #6b7280;
+      }
+      .legend i.secret {
+        background: #9aa0a6;
+        opacity: 0.5;
+      }
+
+      .seq circle {
+        fill: #8b5cf6;
+        stroke: #fff;
+        stroke-width: 1.5;
+      }
+      .seq text {
+        font-size: 10px;
+        font-weight: 700;
+        fill: #fff;
+        text-anchor: middle;
+      }
+
+      .legend {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 10px;
+        line-height: 2;
+      }
+      .legend span {
+        display: inline-block;
+        margin-right: 18px;
+      }
+      .legend i {
+        display: inline-block;
+        width: 16px;
+        height: 3px;
+        background: var(--line);
+        vertical-align: middle;
+        margin-right: 5px;
+      }
+      .legend i.bad {
+        background: var(--bad);
+      }
+      .legend i.far {
+        background: var(--sidebd);
+      }
+      .legend b.sw {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        vertical-align: -2px;
+        margin-right: 5px;
+      }
+      .legend .c {
+        background: var(--center);
+        border: 1.5px solid var(--centerbd);
+      }
+      .legend .n {
+        background: var(--node);
+        border: 1.5px solid var(--nodebd);
+      }
+      .legend .s {
+        background: var(--side);
+        border: 1.5px solid var(--sidebd);
+      }
+      .legend .b {
+        background: var(--badbg);
+        border: 1.5px solid var(--bad);
+      }
+
+      /* 时间轴 */
+      .timeline {
+        position: relative;
+        margin-top: 6px;
+        padding-left: 0;
+      }
+      .timeline:before {
+        content: '';
+        position: absolute;
+        left: 158px;
+        top: 6px;
+        bottom: 6px;
+        width: 1px;
+        background: #e5e7eb;
+      }
+      .item {
+        display: flex;
+        align-items: flex-start;
+        padding: 20px 0;
+        position: relative;
+      }
+      .date {
+        width: 138px;
+        text-align: right;
+        padding-right: 20px;
+        color: #9ca3af;
+        font-size: 12px;
+        line-height: 1.4;
+        padding-top: 2px;
+        letter-spacing: 0.2px;
+        flex: 0 0 138px;
+      }
+      .marker {
+        width: 40px;
+        display: flex;
+        justify-content: center;
+        position: relative;
+        flex: 0 0 40px;
+      }
+      .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #3b82f6;
+        box-shadow: 0 0 0 4px #dbeafe;
+        margin-top: 5px;
+        position: relative;
+        z-index: 1;
+      }
+      .content {
+        flex: 1;
+        padding-left: 10px;
+        min-width: 0;
+      }
+      .kicker {
+        font-size: 12px;
+        color: #9ca3af;
+        margin-bottom: 5px;
+      }
+      .title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 5px;
+        line-height: 1.4;
+      }
+      .desc {
+        font-size: 13.5px;
+        color: #6b7280;
+        line-height: 1.8;
+      }
+      .meta {
+        margin-top: 18px;
+        padding: 14px 16px;
+        border: 1px dashed #d1d5db;
+        border-radius: 10px;
+        background: #fffbeb;
+      }
+      .meta b {
+        color: #92400e;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>《蛙》人物关系图与故事主线</h1>
+      <div class="sub">
+        底本：版本B —— 浙江文艺出版社 2020
+        年版（《莫言经典作品·套装七册》拆分本）。人物关系与版本A一致，两版仅存在编校层面的文字差异。
+      </div>
+
+      <h2>一、人物关系图（全图）</h2>
+      <div class="hint">
+        按 5 列 × 5 行网格严格对齐：方框统一
+        210×76，同行上下边齐平、同列左右边对齐，连线一律横平竖直。左上是万家两代（爷爷、大爷爷），右上是时代背景，右下是陈家与代孕链；三条红色虚线是姑姑手上三条人命，灰色虚线是蝌蚪与金娃的隐秘血缘。
+      </div>
+      <div class="svgbox">
+        <svg viewBox="0 0 1340 730" xmlns="http://www.w3.org/2000/svg" width="1340" height="730">
+          <defs>
+            <marker
+              id="ar"
+              viewBox="0 0 10 10"
+              refX="9"
+              refY="5"
+              markerWidth="7"
+              markerHeight="7"
+              orient="auto-start-reverse"
+            >
+              <path d="M0,0 L10,5 L0,10 z" fill="#9aa0a6" />
+            </marker>
+            <marker
+              id="arf"
+              viewBox="0 0 10 10"
+              refX="9"
+              refY="5"
+              markerWidth="7"
+              markerHeight="7"
+              orient="auto-start-reverse"
+            >
+              <path d="M0,0 L10,5 L0,10 z" fill="#8b5cf6" />
+            </marker>
+            <marker
+              id="arb"
+              viewBox="0 0 10 10"
+              refX="9"
+              refY="5"
+              markerWidth="7"
+              markerHeight="7"
+              orient="auto-start-reverse"
+            >
+              <path d="M0,0 L10,5 L0,10 z" fill="#dc2626" />
+            </marker>
+          </defs>
+          <!-- ===== 连线 ===== -->
+          <path class="edge" d="M250,98 H300" />
+          <text class="elabel" x="275" y="88">兄弟</text>
+          <path class="edge" marker-end="url(#ar)" d="M145,136 V184" />
+          <text class="elabel l" x="153" y="168">父子</text>
+          <path class="edge" marker-end="url(#ar)" d="M510,98 H540 V164 H665 V192" />
+          <text class="elabel" x="600" y="156">父女</text>
+          <path class="edge" d="M250,230 H552" />
+          <text class="elabel" x="400" y="220">堂兄妹</text>
+          <path class="edge" d="M1030,230 H1072" />
+          <text class="elabel" x="1055" y="220">夫妻</text>
+          <path class="edge" marker-end="url(#ar)" d="M145,268 V316" />
+          <text class="elabel l" x="153" y="300">父子</text>
+          <path class="edge bad" marker-end="url(#arb)" d="M580,268 V296 H405 V316" />
+          <text class="elabel bad" x="490" y="288">强制引产→死</text>
+          <path class="edge bad" marker-end="url(#arb)" d="M925,268 V316" />
+          <text class="elabel bad l" x="933" y="300">追堵→身亡</text>
+          <path class="edge bad" marker-end="url(#arb)" d="M1000,268 V310 H1185 V448" />
+          <text class="elabel bad" x="1092" y="302">追捕→早产死</text>
+          <path class="edge" d="M250,362 H292" />
+          <text class="elabel" x="275" y="352">原配夫妻</text>
+          <path class="edge" d="M200,400 V560 H620 V408" />
+          <text class="elabel" x="405" y="550">夫妻·续弦</text>
+          <path class="edge" marker-end="url(#ar)" d="M405,400 V448" />
+          <text class="elabel l" x="413" y="430">母女</text>
+          <path class="edge" marker-end="url(#ar)" d="M145,400 V428 H270 V494 H292" />
+          <text class="elabel" x="200" y="420">父女</text>
+          <path class="edge far" marker-end="url(#arf)" d="M665,400 V580" />
+          <text class="elabel far l" x="680" y="484">牛蛙公司合谋</text>
+          <path class="edge" d="M1030,494 H1072" />
+          <text class="elabel" x="1055" y="484">夫妻</text>
+          <path class="edge" marker-end="url(#ar)" d="M880,532 V580" />
+          <text class="elabel l" x="888" y="556">父女</text>
+          <path class="edge" d="M1185,532 V560 H960 V580" />
+          <text class="elabel" x="1072" y="550">母女</text>
+          <path class="edge far" marker-end="url(#arf)" d="M770,626 H812" />
+          <text class="elabel far" x="795" y="648">安排代孕</text>
+          <path class="edge far" marker-end="url(#arf)" d="M1030,626 H1072" />
+          <text class="elabel far" x="1055" y="648">生母</text>
+          <path class="edge secret" marker-end="url(#ar)" d="M230,400 V680 H1185 V672" />
+          <text class="elabel secret" x="700" y="692">提供精子（生父）</text>
+          <g class="seq">
+            <circle cx="665" cy="480" r="9" />
+            <text x="665" y="483">1</text>
+            <circle cx="791" cy="626" r="9" />
+            <text x="791" y="629">2</text>
+            <circle cx="1051" cy="626" r="9" />
+            <text x="1051" y="629">3</text>
+          </g>
+          <g class="era">
+            <rect x="820" y="74" width="470" height="48" rx="6" />
+            <text x="1055" y="103">时代背景：新中国 60 年生育史 · 计划生育国策</text>
+          </g>
+          <g class="node">
+            <rect x="40" y="60" width="210" height="76" rx="6" />
+            <text class="name" x="145" y="87">爷爷（蝌蚪祖父）</text>
+            <text class="sub" x="145" y="107">大爷爷之弟 · 雇农出身</text>
+            <text class="sub" x="145" y="124">其妻（奶奶）是“老娘婆”</text>
+          </g>
+          <g class="node">
+            <rect x="300" y="60" width="210" height="76" rx="6" />
+            <text class="name" x="405" y="87">大爷爷 万六府</text>
+            <text class="sub" x="405" y="107">八路军医生 · 白求恩弟子</text>
+            <text class="sub" x="405" y="124">姑姑之父 · 抗日烈士</text>
+          </g>
+          <g class="node">
+            <rect x="40" y="192" width="210" height="76" rx="6" />
+            <text class="name" x="145" y="227">父亲</text>
+            <text class="sub" x="145" y="249">爷爷之子 · 蝌蚪之父</text>
+          </g>
+          <g class="center">
+            <rect x="560" y="192" width="470" height="76" rx="6" />
+            <text class="name" x="795" y="219">姑姑 万心</text>
+            <text class="sub" x="795" y="239">大爷爷之女 · 乳名端阳 · 妇产科医生</text>
+            <text class="sub" x="795" y="256">送子娘娘 → 计生执行者 → 以泥娃赎罪</text>
+          </g>
+          <g class="node">
+            <rect x="1080" y="192" width="210" height="76" rx="6" />
+            <text class="name" x="1185" y="227">郝大手</text>
+            <text class="sub" x="1185" y="249">泥塑艺人 · 姑姑丈夫 · 捏泥娃娃赎罪</text>
+          </g>
+          <g class="node">
+            <rect x="40" y="324" width="210" height="76" rx="6" />
+            <text class="name" x="145" y="351">蝌蚪（万足）</text>
+            <text class="sub" x="145" y="371">叙述者 · 乳名小跑 · 剧作家</text>
+            <text class="sub" x="145" y="388">以给杉谷义人写信的方式讲述</text>
+          </g>
+          <g class="bad">
+            <rect x="300" y="324" width="210" height="76" rx="6" />
+            <text class="name" x="405" y="351">王仁美</text>
+            <text class="sub" x="405" y="371">蝌蚪原配 · 生女燕燕</text>
+            <text class="sub" x="405" y="388">偷偷再孕，被强制引产身亡</text>
+          </g>
+          <g class="node">
+            <rect x="560" y="324" width="210" height="76" rx="6" />
+            <text class="name" x="665" y="351">小狮子</text>
+            <text class="sub" x="665" y="371">姑姑徒弟 · 蝌蚪继妻</text>
+            <text class="sub" x="665" y="388">求子心切，主导代孕</text>
+          </g>
+          <g class="bad">
+            <rect x="820" y="324" width="210" height="76" rx="6" />
+            <text class="name" x="925" y="351">耿秀莲（张拳妻）</text>
+            <text class="sub" x="925" y="371">东风村村民 · 张拳之妻 · 怀第四胎</text>
+            <text class="sub" x="925" y="388">拒人流跳河游逃，救起后血崩身亡</text>
+          </g>
+          <g class="node">
+            <rect x="300" y="456" width="210" height="76" rx="6" />
+            <text class="name" x="405" y="491">燕燕</text>
+            <text class="sub" x="405" y="513">蝌蚪与王仁美之女</text>
+          </g>
+          <g class="side">
+            <rect x="820" y="456" width="210" height="76" rx="6" />
+            <text class="name" x="925" y="483">陈鼻</text>
+            <text class="sub" x="925" y="503">蝌蚪同学 · 王胆丈夫</text>
+            <text class="sub" x="925" y="520">长女陈耳殁于大火 · 街头流浪者</text>
+          </g>
+          <g class="bad">
+            <rect x="1080" y="456" width="210" height="76" rx="6" />
+            <text class="name" x="1185" y="491">王胆</text>
+            <text class="sub" x="1185" y="513">超生 · 河上木筏逃跑早产身亡</text>
+          </g>
+          <g class="side">
+            <rect x="560" y="588" width="210" height="76" rx="6" />
+            <text class="name" x="665" y="623">袁腮</text>
+            <text class="sub" x="665" y="645">牛蛙公司老板 · 实为代孕中介</text>
+          </g>
+          <g class="side">
+            <rect x="820" y="588" width="210" height="76" rx="6" />
+            <text class="name" x="925" y="615">陈眉</text>
+            <text class="sub" x="925" y="635">陈鼻与王胆次女 · 毁容</text>
+            <text class="sub" x="925" y="652">代孕母亲 · 生下金娃</text>
+          </g>
+          <g class="side">
+            <rect x="1080" y="588" width="210" height="76" rx="6" />
+            <text class="name" x="1185" y="615">金娃</text>
+            <text class="sub" x="1185" y="635">生母陈眉 · 生父蝌蚪（精子）</text>
+            <text class="sub" x="1185" y="652">由小狮子抱走抚养</text>
+          </g>
+        </svg>
+      </div>
+      <div class="legend">
+        <span><b class="sw c"></b>核心人物：姑姑万心</span>
+        <span><b class="sw n"></b>万家血脉 / 计生线</span>
+        <span><b class="sw s"></b>陈家 / 代孕线</span>
+        <span><b class="sw b"></b>悲剧性死亡人物</span><br />
+        <span><i></i>亲属、夫妻等普通关系</span>
+        <span><i class="far"></i>代孕链条（袁腮的牛蛙公司）</span>
+        <span><i class="bad"></i>计划生育执行中造成的死亡：王仁美、耿秀莲、王胆</span>
+        <span><i class="secret"></i>隐秘的生物学关系（蝌蚪提供精子，是金娃生父）</span>
+      </div>
+
+      <h2>二、故事主线</h2>
+      <div class="timeline">
+        <div class="item">
+          <div class="date">1953–1965</div>
+          <div class="marker"><span class="dot"></span></div>
+          <div class="content">
+            <div class="kicker">第一部 · 新法接生</div>
+            <div class="title">姑姑成为“送子娘娘”</div>
+            <div class="desc">
+              1953
+              年推广新法接生，取代旧式“老娘婆”（蝌蚪的奶奶本身就是老娘婆）。姑姑自称一生接生一万个孩子（话剧中她自述为
+              9883 个），叙述者估计“七八千个总是有的”——1955 年 2 月她接生第 1000
+              个。与空军飞行员王小倜相恋，王驾机叛逃台湾，姑姑受审查、自杀未遂被救，受到留党察看处分。1965
+              年底，新中国成立后第一个计划生育高潮掀起。
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="date">1966–68</div>
+          <div class="marker"><span class="dot"></span></div>
+          <div class="content">
+            <div class="kicker">第一部 · 文革批斗</div>
+            <div class="title">冰上批斗大会，姑姑受辱</div>
+            <div class="desc">
+              文革初起，姑姑是卫生系统“白求恩战斗队”的发起人之一。隆冬，批斗县委书记杨林的大会在胶河北岸滞洪区的冰面上举行，姑姑被押上台陪斗，被揪掉两绺头发，头上留下两个铜钱大的疤痕；黄秋雅揭发她与王小倜“秘密联络”、与杨林“姘居”，老院长不堪凌辱投井自尽。批斗中冰层塌裂，众人落水。
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="date">1970</div>
+          <div class="marker"><span class="dot"></span></div>
+          <div class="content">
+            <div class="kicker">第二部 · 耿秀莲之死</div>
+            <div class="title">姑姑追堵张拳之妻，耿秀莲跳河血崩</div>
+            <div class="desc">
+              姑姑带队到东风村，动员怀第四胎的张拳之妻耿秀莲去做人流，张拳一棍打破姑姑的头。耿秀莲假意应允，上了船却跳水游逃；姑姑驾船追堵，耿秀莲力竭血崩，被救上船后不治身亡，临死咒“万心，你不得好死”。
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="date">1979–80s初</div>
+          <div class="marker"><span class="dot"></span></div>
+          <div class="content">
+            <div class="kicker">第二部 · 王仁美之死</div>
+            <div class="title">蝌蚪结婚生女，妻子被强制引产</div>
+            <div class="desc">
+              蝌蚪参加对越自卫反击战立三等功、提正排职，1979 年 7 月 7
+              日与王仁美结婚；两年后腊月二十三生女燕燕。王仁美偷偷再孕想生儿子，被姑姑带工作队强制引产，大出血身亡。姑姑登门请罪，被岳母一剪刀捅在大腿上。
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="date">1980s</div>
+          <div class="marker"><span class="dot"></span></div>
+          <div class="content">
+            <div class="kicker">第三部 · 王胆之死</div>
+            <div class="title">蝌蚪再婚，王胆木筏早产身亡</div>
+            <div class="desc">
+              蝌蚪母亲病亡，他递交转业报告，与小狮子成婚。姑姑伤口发炎、高烧不退，仍带人搜捕王胆；王胆在河上木筏逃跑时早产，姑姑亲手接下陈眉，王胆血尽身亡，临死说“姑姑，谢谢您救了我的孩子”。
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="date">2000s</div>
+          <div class="marker"><span class="dot"></span></div>
+          <div class="content">
+            <div class="kicker">第四部 · 牛蛙公司与代孕</div>
+            <div class="title">姑姑被蛙吓昏，陈眉代孕生下金娃</div>
+            <div class="desc">
+              蝌蚪与小狮子退休后搬回高密，已住三年。娘娘庙庙会东侧的中美合资家宝妇婴医院开业，一个男孩把包着青蛙的纸包塞给姑姑，姑姑当场口吐白沫、昏厥倒地。小狮子求子心切，到袁腮与小表弟金修的牛蛙公司上班，偷取蝌蚪的精子注入陈眉体内——陈眉是东丽玩具厂大火的幸存者，也是当年没有户口的“黑孩儿”。金娃出生后即被小狮子抱走抚养。
+            </div>
+          </div>
+        </div>
+
+        <div class="item">
+          <div class="date">话剧</div>
+          <div class="marker"><span class="dot"></span></div>
+          <div class="content">
+            <div class="kicker">第五部 · 九幕话剧</div>
+            <div class="title">满月宴、夺子、自缢与再生</div>
+            <div class="desc">
+              第三、四幕，陈眉到派出所状告牛蛙公司抢走孩子，被当成神志不清的疯子；第六幕“金娃满月盛宴”上演，陈眉当席夺走孩子；第八幕，孩子被衙役夺回，“高知县”假戏真做，以“放手者为亲母”判给小狮子。第九幕，姑姑在郝大手、秦河捏泥娃娃的当口套上黑绳上吊，蝌蚪抄刀砍断绳子将她救下——姑姑“死过一次”后“再生”。全剧终于蝌蚪答“犹如喷泉”——幕落（全剧终）。
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h2>三、书名与主题</h2>
+      <div class="meta">
+        <b>“蛙”的隐喻（第五部话剧第四幕，蝌蚪原话）：</b
+        >“暂名青蛙的‘蛙’，当然也可以改成娃娃的‘娃’，当然还可以改成女娲的‘娲’。女娲造人，蛙是多子的象征，蛙是咱们高密东北乡的图腾，我们的泥塑、年画里，都有蛙崇拜的实例。”<br /><br />
+        <b>关于“写作赎罪”：</b
+        >蝌蚪在第四部信中说“既然写作能赎罪，那我就不断地写下去”；但第五部开篇他承认，剧本完成后“心中的罪感非但没有减弱，反而变得更加沉重”，并认定自己“是真正的罪魁祸首”，把王仁美娘儿俩送进了地狱——所谓赎罪，并未完成。<br /><br />
+        <b
+          >作者自述（第 6 章《听取蛙声一片——代后记》；文末注：本文原系作者为 2009
+          年台湾麦田出版社繁体字版《蛙》写的序言）：</b
+        >“在一种强烈的自我剖析的意识引导下，在揭示人物内心的同时也将自己的内心袒露给读者。”写完这部书后，有八个大字沉重地压在他心头——<b>“他人有罪，我亦有罪”</b>。
+      </div>
+    </div>
+  </body>
+</html>

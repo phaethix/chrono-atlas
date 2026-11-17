@@ -38,13 +38,14 @@ Every entry therefore traces back to a year, a chapter and a source, and can be 
 
 ## The volumes
 
-| Vol. | Chart                                                       | Content                                               |
-| ---- | ----------------------------------------------------------- | ----------------------------------------------------- |
-| 1    | [People and stages](demos/renwu/)                           | 15 figures, 6 stages, 19 relations, 2 rejected claims |
-| 2    | [The state](demos/guojia/)                                  | 4 sections: city, two paths, totem, three dynasties   |
-| 5    | [Spring and Autumn, Warring States](demos/chunqiu-zhanguo/) | 38 regions, 29 polities, 69 events, 15 battles        |
+| Vol. | Chart                                                       | Content                                                                       |
+| ---- | ----------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| 1    | [People and stages](demos/renwu/)                           | 15 figures, 6 stages, 19 relations, 2 rejected claims                         |
+| 2    | [The state](demos/guojia/)                                  | 4 sections: city, two paths, totem, three dynasties                           |
+| 3    | [The founders](demos/dianjizhe/)                            | 6 sections: anxiety, mandate, enfeoffment, lineage, rites and music, the core |
+| 5    | [Spring and Autumn, Warring States](demos/chunqiu-zhanguo/) | 38 regions, 29 polities, 69 events, 15 battles                                |
 
-The other twenty-one are catalogued but unbuilt: number, title, period and chapter headings are recorded in [`catalog/manifest.js`](catalog/manifest.js). To add one, see [docs/design/0003](docs/design/0003-full-history-architecture.md) for the order of work and [docs/adding-a-demo.md](docs/adding-a-demo.md) for the mechanics.
+The other twenty are catalogued but unbuilt: number, title, period and chapter headings are recorded in [`catalog/manifest.js`](catalog/manifest.js). To add one, see [docs/design/0003](docs/design/0003-full-history-architecture.md) for the order of work and [docs/adding-a-demo.md](docs/adding-a-demo.md) for the mechanics.
 
 ## Sourcing
 

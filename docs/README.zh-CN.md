@@ -42,9 +42,10 @@
 | ---- | -------------------------------------------------- | ------------------------------------------------ |
 | 一   | [人物与阶段 · 从蛙到龙](../demos/renwu/)           | 15 个人物，6 个阶段，19 条关系，2 条被否定的旧说 |
 | 二   | [国家 · 从部落到文明](../demos/guojia/)            | 四节：城市、两条路、图腾、三代                   |
+| 三   | [奠基者 · 周与中华文明的底色](../demos/dianjizhe/) | 六节：忧患、天命、封建、宗法、礼乐、根本         |
 | 五   | [春秋战国 · 疆域与兼并](../demos/chunqiu-zhanguo/) | 38 个区域，29 个势力，69 条事件，15 场战役       |
 
-其余二十一卷已登记未开工：卷次、书名、分期与章目都记在 [`catalog/manifest.js`](../catalog/manifest.js)。要动手做一卷，先看 [design/0003](design/0003-full-history-architecture.md) 的流程，再看 [adding-a-demo.md](adding-a-demo.md) 的做法。
+其余二十卷已登记未开工：卷次、书名、分期与章目都记在 [`catalog/manifest.js`](../catalog/manifest.js)。要动手做一卷，先看 [design/0003](design/0003-full-history-architecture.md) 的流程，再看 [adding-a-demo.md](adding-a-demo.md) 的做法。
 
 ## 取材
 

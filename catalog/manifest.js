@@ -41,9 +41,11 @@ const VOLUMES = [
   {
     no: 3,
     title: '奠基者',
+    id: 'dianjizhe',
     period: '西周',
-    status: 'planned',
-    views: [],
+    status: 'done',
+    views: ['dianjizhe'],
+    note: '六节：忧患、天命、封建、宗法、礼乐、根本。',
     chapters: ['第一章 生于忧患', '第二章 定音鼓', '第三章 西周大封建', '第四章 天下为家', '第五章 两个基本点', '第六章 根本所在'],
   },
   {
